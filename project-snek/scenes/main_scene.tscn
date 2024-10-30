@@ -1,6 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bsp4xibu18oo0"]
 
-[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://scenes/Robot_MC.png" id="1_2p15c"]
+[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="1_2p15c"]
+[ext_resource type="Texture2D" uid="uid://sxcrqqxcub3c" path="res://particles/2024-10-25T20:41:02,860535148+02:00.png" id="1_qij1p"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
@@ -26,27 +27,25 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 "
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_hgvvf"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hg4tc"]
-size = Vector2(3218, 49)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
+radius = 32.0
+height = 206.0
 
 [node name="main" type="Node2D"]
+
+[node name="2024-10-25t20_41_02,860535148+02_00" type="Sprite2D" parent="."]
+position = Vector2(504, 285)
+scale = Vector2(2.63564, 1.80958)
+texture = ExtResource("1_qij1p")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 script = SubResource("GDScript_isu8i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-shape = SubResource("CircleShape2D_hgvvf")
+position = Vector2(0, -9)
+shape = SubResource("CapsuleShape2D_pkm1a")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-position = Vector2(552, 124)
 texture = ExtResource("1_2p15c")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D/Sprite2D"]
-
-[node name="staticbody" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="staticbody"]
-position = Vector2(751, 258)
-shape = SubResource("RectangleShape2D_hg4tc")
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
