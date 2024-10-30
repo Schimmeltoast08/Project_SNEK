@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsp4xibu18oo0"]
+[gd_scene load_steps=6 format=3 uid="uid://bsp4xibu18oo0"]
 
 [ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="1_2p15c"]
 [ext_resource type="Texture2D" uid="uid://sxcrqqxcub3c" path="res://particles/2024-10-25T20:41:02,860535148+02:00.png" id="1_qij1p"]
+[ext_resource type="Script" path="res://scenes/camera_2d.gd" id="3_qywno"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
@@ -9,22 +10,12 @@ script/source = "extends CharacterBody2D
 #SPEED
 const SPEED = 600.0
 
-
-
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	
-
-
-	# Get the input direction and handle the movement/deceleratiodn.
-	# As good practice, you should replace UI actions with custom gameplay actions.
+	 # movement
 	var direction := Input.get_vector(\"button_a\", \"button_d\", \"button_w\", \"button_s\")
-	
-	
-	
 	velocity = direction * SPEED
-
 	move_and_slide()
+	# /movement
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
@@ -49,3 +40,5 @@ shape = SubResource("CapsuleShape2D_pkm1a")
 texture = ExtResource("1_2p15c")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+position_smoothing_enabled = true
+script = ExtResource("3_qywno")
