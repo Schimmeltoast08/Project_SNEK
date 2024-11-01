@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://nywsbskbxdgn"]
+
+[ext_resource type="Script" path="res://scenes/basic_robot.gd" id="1_5wt1h"]
+[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="1_mowwl"]
+[ext_resource type="Texture2D" uid="uid://d3fbbtiukiuy0" path="res://Entety sprites/Robot_MC_outline.png" id="2_qafqr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d7uqw"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xgwfi"]
+radius = 43.0
+height = 208.0
+
+[node name="basic_robot" type="CharacterBody2D"]
+script = ExtResource("1_5wt1h")
+
+[node name="robot" type="Sprite2D" parent="."]
+texture = ExtResource("1_mowwl")
+
+[node name="border" type="Sprite2D" parent="robot"]
+material = SubResource("ShaderMaterial_d7uqw")
+scale = Vector2(1.03, 1.03)
+texture = ExtResource("2_qafqr")
+
+[node name="start_position" type="Marker2D" parent="."]
+
+[node name="end_position" type="Marker2D" parent="."]
+position = Vector2(991, 441)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -11)
+shape = SubResource("CapsuleShape2D_xgwfi")

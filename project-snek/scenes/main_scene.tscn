@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 [gd_scene load_steps=16 format=3 uid="uid://bsp4xibu18oo0"]
+=======
+[gd_scene load_steps=15 format=3 uid="uid://bsp4xibu18oo0"]
+>>>>>>> Stashed changes
 
 [ext_resource type="Texture2D" uid="uid://sxcrqqxcub3c" path="res://particles/2024-10-25T20:41:02,860535148+02:00.png" id="1_qij1p"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="3_ewsnv"]
