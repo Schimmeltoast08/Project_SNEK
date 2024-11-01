@@ -1,151 +1,37 @@
-[gd_scene load_steps=19 format=3 uid="uid://bsp4xibu18oo0"]
+[gd_scene load_steps=6 format=3 uid="uid://bsp4xibu18oo0"]
 
-[ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="3_ewsnv"]
-[ext_resource type="Script" path="res://scenes/basic_robot.gd" id="3_p3jsh"]
-[ext_resource type="Script" path="res://scenes/camera_2d.gd" id="3_qywno"]
-[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="3_tunev"]
-[ext_resource type="Shader" path="res://scenes/main_scene.gdshader" id="5_n2vcn"]
+[ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
+[ext_resource type="Texture2D" uid="uid://bgsywionw74oi" path="res://Entety sprites/screenshot-2024-10-30-18-40-38.png" id="2_vyttv"]
+[ext_resource type="Script" path="res://scenes/path_follow_2d.gd" id="3_5ug16"]
+[ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
 
-[sub_resource type="GDScript" id="GDScript_isu8i"]
-script/source = "extends CharacterBody2D
-
-#SPEED
-const SPEED = 600.0
-
-func _physics_process(delta: float) -> void:
-	 # movement
-	var direction := Input.get_vector(\"button_a\", \"button_d\", \"button_w\", \"button_s\")
-	velocity = velocity.normalized()
-	velocity = direction * SPEED
-	move_and_slide()
-	# /movement
-"
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
-radius = 32.0
-height = 206.0
-
-[sub_resource type="Animation" id="Animation_fdj5p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-
-[sub_resource type="Animation" id="Animation_632s8"]
-resource_name = "down"
-length = 0.8
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.333333, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [1, 1, 1, 2]
-}
-
-[sub_resource type="Animation" id="Animation_jxst4"]
-resource_name = "down_animation"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nnkji"]
+[sub_resource type="Curve2D" id="Curve2D_p2kxf"]
 _data = {
-"RESET": SubResource("Animation_fdj5p"),
-"down": SubResource("Animation_632s8"),
-"down_animation": SubResource("Animation_jxst4")
+"points": PackedVector2Array(0, 0, 0, 0, 61, 706, 0, 0, 0, 0, 1898, 704, 0, 0, 0, 0, 1901, 533, 0, 0, 0, 0, 66, 533, 0, 0, 0, 0, 64, 641, 0, 0, 0, 0, 61, 706)
 }
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_otnyh"]
-animation = &"down"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mk2vb"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_juyjf"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2u245"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_5e5pq"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_otnyh")
-blend_point_0/pos = Vector2(0, -0.9)
-blend_point_1/node = SubResource("AnimationNodeAnimation_mk2vb")
-blend_point_1/pos = Vector2(-1, 0)
-blend_point_2/node = SubResource("AnimationNodeAnimation_juyjf")
-blend_point_2/pos = Vector2(0, 0.9)
-blend_point_3/node = SubResource("AnimationNodeAnimation_2u245")
-blend_point_3/pos = Vector2(1, 0)
-blend_mode = 1
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_0cm0u"]
-states/Walk_down/node = SubResource("AnimationNodeBlendSpace2D_5e5pq")
-states/Walk_down/position = Vector2(406, 82)
-graph_offset = Vector2(-156, -5)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h0p4o"]
-shader = ExtResource("5_n2vcn")
+point_count = 6
 
 [node name="main" type="Node2D"]
 
-[node name="2024-10-25t20_41_02,860535148+02_00" type="Sprite2D" parent="."]
-position = Vector2(504, 285)
-scale = Vector2(2.63564, 1.80958)
+[node name="Screenshot-2024-10-30-18-40-38" type="Sprite2D" parent="."]
+position = Vector2(991, 538)
+texture = ExtResource("2_vyttv")
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(-18, -202)
-script = SubResource("GDScript_isu8i")
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-position = Vector2(0, -9)
-shape = SubResource("CapsuleShape2D_pkm1a")
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2(-77, 51)
+curve = SubResource("Curve2D_p2kxf")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-position_smoothing_enabled = true
-script = ExtResource("3_qywno")
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+position = Vector2(61, 706)
+rotation = -1.5708
+rotates = false
+script = ExtResource("3_5ug16")
 
-[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-texture = ExtResource("3_ewsnv")
-hframes = 3
-frame = 1
+[node name="enemy_root-node" parent="Path2D/PathFollow2D" instance=ExtResource("3_hlimb")]
+position = Vector2(204.847, 10.5753)
+rotation = 1.58824
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D"]
-libraries = {
-"": SubResource("AnimationLibrary_nnkji")
-}
-
-[node name="AnimationTree" type="AnimationTree" parent="CharacterBody2D"]
-tree_root = SubResource("AnimationNodeStateMachine_0cm0u")
-anim_player = NodePath("../AnimationPlayer")
-parameters/Walk_down/blend_position = Vector2(0.214626, 0.123894)
-
-[node name="basic-robot" type="Node2D" parent="."]
-
-[node name="robot" type="Sprite2D" parent="basic-robot"]
-position = Vector2(-47, -490)
-texture = ExtResource("3_tunev")
-script = ExtResource("3_p3jsh")
-
-[node name="border" type="Sprite2D" parent="basic-robot/robot"]
-show_behind_parent = true
-material = SubResource("ShaderMaterial_h0p4o")
-scale = Vector2(1.05, 1.03)
-texture = ExtResource("3_tunev")
-
-[node name="end_position" type="Marker2D" parent="basic-robot"]
-position = Vector2(-206, -203)
-
-[node name="start_position" type="Marker2D" parent="basic-robot"]
-position = Vector2(-393, -215)
+[connection signal="player_near_robot" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot"]
+[connection signal="player_near_robot_exited" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot_exited"]
