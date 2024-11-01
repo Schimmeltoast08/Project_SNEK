@@ -1,8 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://bsp4xibu18oo0"]
+[gd_scene load_steps=19 format=3 uid="uid://bsp4xibu18oo0"]
 
-[ext_resource type="Texture2D" uid="uid://sxcrqqxcub3c" path="res://particles/2024-10-25T20:41:02,860535148+02:00.png" id="1_qij1p"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="3_ewsnv"]
+[ext_resource type="Script" path="res://scenes/basic_robot.gd" id="3_p3jsh"]
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="3_qywno"]
+[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="3_tunev"]
+[ext_resource type="Shader" path="res://scenes/main_scene.gdshader" id="5_n2vcn"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
@@ -23,6 +25,21 @@ func _physics_process(delta: float) -> void:
 radius = 32.0
 height = 206.0
 
+[sub_resource type="Animation" id="Animation_fdj5p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
 [sub_resource type="Animation" id="Animation_632s8"]
 resource_name = "down"
 length = 0.8
@@ -38,21 +55,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [1, 1, 1, 2]
-}
-
-[sub_resource type="Animation" id="Animation_fdj5p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
 }
 
 [sub_resource type="Animation" id="Animation_jxst4"]
@@ -93,14 +95,17 @@ states/Walk_down/node = SubResource("AnimationNodeBlendSpace2D_5e5pq")
 states/Walk_down/position = Vector2(406, 82)
 graph_offset = Vector2(-156, -5)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h0p4o"]
+shader = ExtResource("5_n2vcn")
+
 [node name="main" type="Node2D"]
 
 [node name="2024-10-25t20_41_02,860535148+02_00" type="Sprite2D" parent="."]
 position = Vector2(504, 285)
 scale = Vector2(2.63564, 1.80958)
-texture = ExtResource("1_qij1p")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(-18, -202)
 script = SubResource("GDScript_isu8i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
@@ -125,3 +130,22 @@ libraries = {
 tree_root = SubResource("AnimationNodeStateMachine_0cm0u")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Walk_down/blend_position = Vector2(0.214626, 0.123894)
+
+[node name="basic-robot" type="Node2D" parent="."]
+
+[node name="robot" type="Sprite2D" parent="basic-robot"]
+position = Vector2(-47, -490)
+texture = ExtResource("3_tunev")
+script = ExtResource("3_p3jsh")
+
+[node name="border" type="Sprite2D" parent="basic-robot/robot"]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_h0p4o")
+scale = Vector2(1.05, 1.03)
+texture = ExtResource("3_tunev")
+
+[node name="end_position" type="Marker2D" parent="basic-robot"]
+position = Vector2(-206, -203)
+
+[node name="start_position" type="Marker2D" parent="basic-robot"]
+position = Vector2(-393, -215)
