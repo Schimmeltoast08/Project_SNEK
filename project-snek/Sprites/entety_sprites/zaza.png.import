@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://83i01mrnbsjt"
-path="res://.godot/imported/Robot_MC.png-4141e28381581b70be71ee2b290b0129.ctex"
+uid="uid://clnd6kdt25vfy"
+path="res://.godot/imported/zaza.png-433c2e3148fab31de5213cfaa87e06a8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/Robot_MC.png"
-dest_files=["res://.godot/imported/Robot_MC.png-4141e28381581b70be71ee2b290b0129.ctex"]
+source_file="res://Sprites/entety_sprites/zaza.png"
+dest_files=["res://.godot/imported/zaza.png-433c2e3148fab31de5213cfaa87e06a8.ctex"]
 
 [params]
 

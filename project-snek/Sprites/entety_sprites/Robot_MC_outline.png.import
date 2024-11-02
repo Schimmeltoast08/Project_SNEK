@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blyer02jjetmb"
-path="res://.godot/imported/Robot_MC_outline.png-1a543543cf9858859fa37856531d8f8a.ctex"
+path="res://.godot/imported/Robot_MC_outline.png-6bc70c27fbe7af2faf0fbb388b67aeec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/Robot_MC_outline.png"
-dest_files=["res://.godot/imported/Robot_MC_outline.png-1a543543cf9858859fa37856531d8f8a.ctex"]
+source_file="res://Sprites/entety_sprites/Robot_MC_outline.png"
+dest_files=["res://.godot/imported/Robot_MC_outline.png-6bc70c27fbe7af2faf0fbb388b67aeec.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djspwq1jrs86e"
-path="res://.godot/imported/temporary_background.jpg-6863cf0c1335f0fc76d76fab7302cf5d.ctex"
+uid="uid://83i01mrnbsjt"
+path="res://.godot/imported/Robot_MC.png-988a478bac90be8852306e0ac8b562ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/temporary_background.jpg"
-dest_files=["res://.godot/imported/temporary_background.jpg-6863cf0c1335f0fc76d76fab7302cf5d.ctex"]
+source_file="res://Sprites/entety_sprites/Robot_MC.png"
+dest_files=["res://.godot/imported/Robot_MC.png-988a478bac90be8852306e0ac8b562ca.ctex"]
 
 [params]
 
