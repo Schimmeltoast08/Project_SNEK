@@ -1,21 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsp4xibu18oo0"]
+[gd_scene load_steps=7 format=3 uid="uid://bsp4xibu18oo0"]
 
 [ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
-[ext_resource type="Texture2D" uid="uid://bgsywionw74oi" path="res://Entety sprites/screenshot-2024-10-30-18-40-38.png" id="2_vyttv"]
+[ext_resource type="Texture2D" uid="uid://djspwq1jrs86e" path="res://Entety sprites/temporary_background.jpg" id="1_hxlxt"]
+[ext_resource type="Script" path="res://scenes/main_scene.gd" id="1_tg1lt"]
 [ext_resource type="Script" path="res://scenes/path_follow_2d.gd" id="3_5ug16"]
 [ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
 
 [sub_resource type="Curve2D" id="Curve2D_p2kxf"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 61, 706, 0, 0, 0, 0, 1898, 704, 0, 0, 0, 0, 1901, 533, 0, 0, 0, 0, 66, 533, 0, 0, 0, 0, 64, 641, 0, 0, 0, 0, 61, 706)
+"points": PackedVector2Array(0, 0, 0, 0, 1765, 294, 0, 0, 0, 0, 1794, 1139, 0, 0, 0, 0, 4014, 1141, 0, 0, 0, 0, 4048, 1978, 0, 0, 0, 0, 4701, 1987, 0, 0, 0, 0, 4048, 1981, 0, 0, 0, 0, 4019, 1145, 0, 0, 0, 0, 1794, 1139, 0, 0, 0, 0, 1765, 298)
 }
-point_count = 6
+point_count = 9
 
 [node name="main" type="Node2D"]
+script = ExtResource("1_tg1lt")
 
-[node name="Screenshot-2024-10-30-18-40-38" type="Sprite2D" parent="."]
-position = Vector2(991, 538)
-texture = ExtResource("2_vyttv")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3204.5, 2099.5)
+scale = Vector2(6.411, 7.17177)
+texture = ExtResource("1_hxlxt")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
 
@@ -24,7 +27,7 @@ position = Vector2(-77, 51)
 curve = SubResource("Curve2D_p2kxf")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
-position = Vector2(61, 706)
+position = Vector2(1765, 294)
 rotation = -1.5708
 rotates = false
 script = ExtResource("3_5ug16")
@@ -32,6 +35,11 @@ script = ExtResource("3_5ug16")
 [node name="enemy_root-node" parent="Path2D/PathFollow2D" instance=ExtResource("3_hlimb")]
 position = Vector2(204.847, 10.5753)
 rotation = 1.58824
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(7, 3892, 426, 3893, 469, 3851, 469, 3791, 503, 3718, 557, 3713, 591, 3671, 648, 3661, 669, 3637, 676, 3571, 718, 3522, 749, 3477, 806, 3484, 847, 3433, 858, 2508, 889, 2462, 950, 2452, 976, 2412, 1044, 2384, 1056, 2295, 1093, 2275, 1111, 2223, 1145, 2217, 1176, 2210, 1216, 2176, 1243, 2067, 1275, 2025, 1316, 2028, 1349, 1987, 1397, 1977, 1425, 1950, 1432, 1889, 1469, 1842, 1493, 1796, 2397, 1796, 3025, 1786, 3098, 1943, 3193, 2022, 3261, 2035, 3292, 2156, 3349, 2202, 3397, 2209, 3426, 2251, 3462, 2286, 3470, 2367, 3544, 2407, 3571, 2442, 3634, 2452, 3664, 2514, 3671, 3423, 3725, 3474, 3781, 3467, 3800, 3518, 3845, 3555, 3852, 3638, 3914, 3664, 3955, 3699, 4012, 3709, 4032, 3753, 4049, 3858, 4112, 3901, 4159, 3894, 4189, 3951, 4228, 3986, 4231, 4054, 4308, 4095, 4397, 4148, 4424, 4210, 3487, 4211, 3486, 4132, 3428, 4095, 3373, 4084, 3352, 4024, 3319, 3935, 3187, 3852, 3132, 3812, 3124, 3727, 3069, 3675, 3004, 3664, 3052, 4005, 2998, 4100, 2617, 4145, 2491, 4052, 2479, 3876, 2363, 3848, 2287, 3772, 2210, 3638, 2189, 3422, 2225, 3251, 1839, 3251, 1797, 3291, 1787, 3374, 1735, 3431, 1671, 3448, 1620, 3505, 1586, 3569, 1534, 3659, 1442, 3693, 1402, 3823, 1314, 3857, 1210, 3925, 1198, 4010, 1174, 4050, 1160, 4076, 1096, 4096, 1056, 4120, 1032, 4202, -2, 4208)
 
 [connection signal="player_near_robot" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot"]
 [connection signal="player_near_robot_exited" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot_exited"]
