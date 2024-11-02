@@ -14,6 +14,10 @@ config/name="Project SNEK"
 run/main_scene="res://scenes/main_scene.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 
+[dotnet]
+
+project/assembly_name="Project SNEK"
+
 [input]
 
 button_space={

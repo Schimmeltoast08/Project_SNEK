@@ -386,5 +386,6 @@ script = ExtResource("3_5ug16")
 position = Vector2(204.847, 10.5753)
 rotation = 1.58824
 
+[connection signal="enemy_attack" from="Path2D/PathFollow2D/enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]
 [connection signal="player_near_robot" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot"]
 [connection signal="player_near_robot_exited" from="Path2D/PathFollow2D/enemy_root-node" to="Path2D/PathFollow2D" method="_on_enemy_rootnode_player_near_robot_exited"]
