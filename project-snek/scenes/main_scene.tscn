@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bsp4xibu18oo0"]
 
 [ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
-[ext_resource type="Texture2D" uid="uid://djspwq1jrs86e" path="res://Entety sprites/temporary_background.jpg" id="1_hxlxt"]
+[ext_resource type="Texture2D" uid="uid://djspwq1jrs86e" path="res://Sprites/Static_sprites/temporary_background.jpg" id="1_hxlxt"]
 [ext_resource type="Script" path="res://scenes/main_scene.gd" id="1_tg1lt"]
 [ext_resource type="Script" path="res://scenes/path_follow_2d.gd" id="3_5ug16"]
 [ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
