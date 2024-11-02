@@ -8,7 +8,6 @@ var init_count = 1
 
 
 
-
 func _on_area_near_body_entered(body):
 	player_near_robot.emit()
 	$border.visible = true
