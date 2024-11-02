@@ -28,6 +28,7 @@ shape = SubResource("CapsuleShape2D_drhvn")
 [node name="area_near" type="Area2D" parent="."]
 
 [node name="shape_of_area_near" type="CollisionShape2D" parent="area_near"]
+position = Vector2(40, 2)
 shape = SubResource("RectangleShape2D_rdcb2")
 
 [connection signal="body_entered" from="area_near" to="." method="_on_area_near_body_entered"]
