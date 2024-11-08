@@ -8,24 +8,26 @@ var init_count = 1
 var close =false
 var first_bug = false
 
-var dir_x =0
-var dir_y = 0
-
+var direction_player_x =0
+var direction_player_y = 0
+var speed = 0.5
 
 
 func _physics_process(delta: float) -> void:
+	
+	#player root
 	var player = get_parent().get_node("CharacterBody2D")
+	#get direction to player
 	if player.position.x > position.x:
-		dir_x=0.5
+		direction_player_x=speed
 	else:
-		dir_x=-0.5
+		direction_player_x=-speed
 	if player.position.y > position.y:
-		dir_y=0.5
+		direction_player_y=speed
 	else:
-		dir_y=-0.5
+		direction_player_y=-speed
 	
 	if close==true:
-		print("goo")
 		var direction = Vector2(dir_x, dir_y)
 		velocity = velocity.normalized()
 		velocity = direction * 600
