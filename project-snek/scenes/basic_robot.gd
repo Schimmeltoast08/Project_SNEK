@@ -39,11 +39,10 @@ func _on_area_near_body_entered(body):
 	$border.visible = true
 	if first_bug:
 		close=true
-		print("true")
 	else:
 		first_bug=true
 	print(close)
-	enemy_attack.emit()
+	
 	
 	
 	
@@ -56,3 +55,11 @@ func _on_area_near_body_exited(body):
 		
 	
 	
+
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	enemy_attack.emit()
+
+
+func _on_attack_area_body_exited(body: Node2D) -> void:
+	pass # Replace with function body.
