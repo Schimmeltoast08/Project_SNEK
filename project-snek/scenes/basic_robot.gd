@@ -28,7 +28,7 @@ func _physics_process(delta: float) -> void:
 		direction_player_y=-speed
 	
 	if close==true:
-		var direction = Vector2(dir_x, dir_y)
+		var direction = Vector2(direction_player_x, direction_player_y)
 		velocity = velocity.normalized()
 		velocity = direction * 600
 		move_and_slide()
