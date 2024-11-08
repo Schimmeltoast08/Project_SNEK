@@ -9,7 +9,7 @@ radius = 42.0
 height = 210.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rdcb2"]
-size = Vector2(378, 349)
+size = Vector2(1004.5, 1045.25)
 
 [node name="enemy_root-node" type="CharacterBody2D"]
 script = ExtResource("1_rv8le")
@@ -28,7 +28,7 @@ shape = SubResource("CapsuleShape2D_drhvn")
 [node name="area_near" type="Area2D" parent="."]
 
 [node name="shape_of_area_near" type="CollisionShape2D" parent="area_near"]
-position = Vector2(40, 2)
+position = Vector2(2, -4)
 shape = SubResource("RectangleShape2D_rdcb2")
 
 [connection signal="body_entered" from="area_near" to="." method="_on_area_near_body_entered"]
