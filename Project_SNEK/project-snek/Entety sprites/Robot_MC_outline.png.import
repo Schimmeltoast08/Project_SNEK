@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2sju8u0bkua5"
-path="res://.godot/imported/New Piskel (1) (2).png-9310c429944300174f2c1c8fed019d9d.ctex"
+uid="uid://blyer02jjetmb"
+path="res://.godot/imported/Robot_MC_outline.png-1a543543cf9858859fa37856531d8f8a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/tilemap_sprites/New Piskel (1) (2).png"
-dest_files=["res://.godot/imported/New Piskel (1) (2).png-9310c429944300174f2c1c8fed019d9d.ctex"]
+source_file="res://Entety sprites/Robot_MC_outline.png"
+dest_files=["res://.godot/imported/Robot_MC_outline.png-1a543543cf9858859fa37856531d8f8a.ctex"]
 
 [params]
 

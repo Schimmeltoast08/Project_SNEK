@@ -35,7 +35,8 @@ func _physics_process(delta: float) -> void:
 			move_and_slide()
 		
 
-func _on_area_near_body_entered():
+
+func _on_area_near_body_entered(body):
 	player_near_robot.emit()
 	$border.visible = true
 	if first_bug:
@@ -49,7 +50,7 @@ func _on_area_near_body_entered():
 	
 	
 
-func _on_area_near_body_exited():
+func _on_area_near_body_exited(body):
 	player_near_robot_exited.emit()
 	$border.visible = false
 	close=false
