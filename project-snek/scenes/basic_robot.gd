@@ -11,7 +11,7 @@ var first_bug = false
 var direction_player_x =0
 var direction_player_y = 0
 var speed = 0.5
-
+var attacking = false
 
 func _physics_process(delta: float) -> void:
 	
@@ -26,22 +26,25 @@ func _physics_process(delta: float) -> void:
 		direction_player_y=speed
 	else:
 		direction_player_y=-speed
-	
-	if close==true:
-		var direction = Vector2(direction_player_x, direction_player_y)
-		velocity = velocity.normalized()
-		velocity = direction * 600
-		move_and_slide()
+	#makes the enemy follow the player if its not attacking
+	if attacking ==false:
+		if close==true:
+			var direction = Vector2(direction_player_x, direction_player_y)
+			velocity = velocity.normalized()
+			velocity = direction * 600
+			move_and_slide()
+		
 
 
 func _on_area_near_body_entered(body):
 	player_near_robot.emit()
 	$border.visible = true
 	if first_bug:
+		attacking= false
 		close=true
 	else:
 		first_bug=true
-	print(close)
+	
 	
 	
 	
@@ -59,7 +62,8 @@ func _on_area_near_body_exited(body):
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	enemy_attack.emit()
+	attacking = true
 
 
 func _on_attack_area_body_exited(body: Node2D) -> void:
-	pass # Replace with function body.
+	attacking = false
