@@ -8,10 +8,10 @@ var init_count = 1
 
 
 
-func _on_area_near_body_entered(body):
+func _on_area_near_body_entered():
 	player_near_robot.emit()
 	$border.visible = true
 
-func _on_area_near_body_exited(body):
+func _on_area_near_body_exited():
 	player_near_robot_exited.emit()
 	$border.visible = false
