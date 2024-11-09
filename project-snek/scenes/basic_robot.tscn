@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8lweun22mlwv"]
+[gd_scene load_steps=7 format=3 uid="uid://c8lweun22mlwv"]
 
 [ext_resource type="Script" path="res://scenes/basic_robot.gd" id="1_rv8le"]
 [ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Sprites/entety_sprites/Robot_MC.png" id="2_rmc3w"]
@@ -9,7 +9,10 @@ radius = 42.0
 height = 210.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rdcb2"]
-size = Vector2(378, 349)
+size = Vector2(1004.5, 1045.25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgl7e"]
+size = Vector2(300, 415)
 
 [node name="enemy_root-node" type="CharacterBody2D"]
 script = ExtResource("1_rv8le")
@@ -28,7 +31,16 @@ shape = SubResource("CapsuleShape2D_drhvn")
 [node name="area_near" type="Area2D" parent="."]
 
 [node name="shape_of_area_near" type="CollisionShape2D" parent="area_near"]
+position = Vector2(2, -4)
 shape = SubResource("RectangleShape2D_rdcb2")
+
+[node name="attack_area" type="Area2D" parent="."]
+
+[node name="shape_of_area_attack" type="CollisionShape2D" parent="attack_area"]
+position = Vector2(8, 6.5)
+shape = SubResource("RectangleShape2D_qgl7e")
 
 [connection signal="body_entered" from="area_near" to="." method="_on_area_near_body_entered"]
 [connection signal="body_exited" from="area_near" to="." method="_on_area_near_body_exited"]
+[connection signal="body_entered" from="attack_area" to="." method="_on_attack_area_body_entered"]
+[connection signal="body_exited" from="attack_area" to="." method="_on_attack_area_body_exited"]
