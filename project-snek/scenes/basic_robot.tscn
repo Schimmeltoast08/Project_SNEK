@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://c8lweun22mlwv"]
 
 [ext_resource type="Script" path="res://scenes/basic_robot.gd" id="1_rv8le"]
-[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Robot_MC.png" id="2_rmc3w"]
-[ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Entety sprites/Robot_MC_outline.png" id="3_1mlmy"]
+[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Sprites/entety_sprites/Robot_MC.png" id="2_rmc3w"]
+[ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Sprites/entety_sprites/Robot_MC_outline.png" id="3_1mlmy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_drhvn"]
 radius = 42.0

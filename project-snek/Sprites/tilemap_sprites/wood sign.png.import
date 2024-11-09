@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clnd6kdt25vfy"
-path="res://.godot/imported/zaza.png-9d9fe5e7afa7df1345228a28352ab3cd.ctex"
+uid="uid://qy1nowmtcfgu"
+path="res://.godot/imported/wood sign.png-ad7cb025f67add6c5dab431e6b330cda.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/zaza.png"
-dest_files=["res://.godot/imported/zaza.png-9d9fe5e7afa7df1345228a28352ab3cd.ctex"]
+source_file="res://Sprites/tilemap_sprites/wood sign.png"
+dest_files=["res://.godot/imported/wood sign.png-ad7cb025f67add6c5dab431e6b330cda.ctex"]
 
 [params]
 

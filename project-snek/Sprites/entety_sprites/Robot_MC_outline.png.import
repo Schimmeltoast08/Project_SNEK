@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cr3yusowhmcrh"
-path="res://.godot/imported/MC_movement.png-354bc604ebf6b79d1d6e4ef32bb0a9d4.ctex"
+uid="uid://blyer02jjetmb"
+path="res://.godot/imported/Robot_MC_outline.png-6bc70c27fbe7af2faf0fbb388b67aeec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/animation sprites/MC_movement.png"
-dest_files=["res://.godot/imported/MC_movement.png-354bc604ebf6b79d1d6e4ef32bb0a9d4.ctex"]
+source_file="res://Sprites/entety_sprites/Robot_MC_outline.png"
+dest_files=["res://.godot/imported/Robot_MC_outline.png-6bc70c27fbe7af2faf0fbb388b67aeec.ctex"]
 
 [params]
 

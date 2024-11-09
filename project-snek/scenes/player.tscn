@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
-[ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
+[ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Sprites/animation_sprites/MC_movement.png" id="2_ylaxq"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
