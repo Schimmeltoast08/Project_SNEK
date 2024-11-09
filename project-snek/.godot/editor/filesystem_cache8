@@ -1,0 +1,27 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1731158707
+::res://scenes/::1731158682
+basic_robot.gd::GDScript::-1::1731158682::0::1::::<>CharacterBody2D<>::
+basic_robot.tscn::PackedScene::7113125351565193053::1731158682::0::1::::<><>::res://scenes/basic_robot.gd<>uid://83i01mrnbsjt::::res://Sprites/entety_sprites/Robot_MC.png<>uid://blyer02jjetmb::::res://Sprites/entety_sprites/Robot_MC_outline.png
+basic_robot_revamped.gd::GDScript::-1::1730583903::0::1::::<>CharacterBody2D<>::
+camera_2d.gd::GDScript::-1::1730583903::0::1::::<>Camera2D<>::
+main_scene.gd::GDScript::-1::1730584918::0::1::::<>Node2D<>::
+main_scene.gdshader::Shader::-1::1730583903::0::1::::<><>::
+main_scene.tscn::PackedScene::3682587824214993173::1731158682::0::1::::<><>::uid://dddj0jy148j2l::::res://scenes/player.tscn<>res://scenes/main_scene.gd<>uid://dmjrsalb0lxvj::::res://Sprites/tilemap_sprites/Solaria_tilemap.png<>res://scenes/path_follow_2d.gd<>uid://c8lweun22mlwv::::res://scenes/basic_robot.tscn
+node_2d.gd::GDScript::-1::1730583903::0::1::::<>Node2D<>::
+path_follow_2d.gd::GDScript::-1::1730585380::0::1::::<>PathFollow2D<>::
+player.tscn::PackedScene::7376613324044940637::1731158682::0::1::::<><>::res://scenes/camera_2d.gd<>uid://cr3yusowhmcrh::::res://Sprites/animation_sprites/MC_movement.png
+robot_check_player_near.gd::GDScript::-1::1730583903::0::1::::<>Area2D<>::
+::res://Sprites/::1730586095
+::res://Sprites/animation_sprites/::1730586096
+MC_movement.png::CompressedTexture2D::6025348178107892065::1730583903::1730586096::1::::<><>::
+::res://Sprites/entety_sprites/::1730586088
+Robot_MC.png::CompressedTexture2D::2374566182893088261::1730583903::1730586088::1::::<><>::
+Robot_MC_outline.png::CompressedTexture2D::3208317611490939253::1730583903::1730586088::1::::<><>::
+zaza.png::CompressedTexture2D::5571993599565158998::1730583903::1730586088::1::::<><>::
+::res://Sprites/Static_sprites/::1730586082
+temporary_background.jpg::CompressedTexture2D::7829071366722975590::1730584321::1730586082::1::::<><>::
+::res://Sprites/tilemap_sprites/::1731158682
+New Piskel (1) (2).png::CompressedTexture2D::1932841511917227630::1731158145::1731158160::1::::<><>::
+Solaria_tilemap.png::CompressedTexture2D::8021171924761699831::1731158682::1731158708::1::::<><>::
+wood sign.png::CompressedTexture2D::1174169191321943732::1731158145::1731158160::1::::<><>::
