@@ -35,6 +35,7 @@ func _physics_process(delta: float) -> void:
 			move_and_slide()
 		
 
+
 func _on_area_near_body_entered(body):
 	player_near_robot.emit()
 	$border.visible = true
