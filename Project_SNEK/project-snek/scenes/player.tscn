@@ -1,35 +1,56 @@
-[gd_scene load_steps=15 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=18 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
+[ext_resource type="Script" path="res://scenes/health_bar.gd" id="3_h4ksh"]
+[ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_tuknr"]
+[ext_resource type="Script" path="res://scenes/death_screen.gd" id="5_nksik"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
 
 #SPEED
-const SPEED = 600.0
-var Health = 10
+var SPEED = 600.0
+
+# this goes into the health bar called \"Progress bar\" to indicate that it needs to update (saves recources)
+signal player_health_Changed
+
+signal player_died
+
+# maximum player health
+@export var maximum_player_health = 10
+
+# current player health
+@export var Health = 10
+
+# status if player is alive
 var alive = true
-func _physics_process(delta: float) -> void:
-	if(alive): # movement
+
+
+func _physics_process(delta):
+	if(alive): # movement if player is alive, if he is dead then no more movement
 		var direction := Input.get_vector(\"button_a\", \"button_d\", \"button_w\", \"button_s\")
 		velocity = velocity.normalized()
 		velocity = direction * SPEED
 		move_and_slide()
 	# /movement
 
+# manages player health
 func take_damage(damage):
+	player_health_Changed.emit(Health, maximum_player_health)
 	if alive:
 		Health-=damage
 		if Health<=0:
 			alive=false
 			print(\"you dead\")
+			player_died.emit()
 			
 
-
-func _on_enemy_rootnode_enemy_attack() -> void:
+# make it so when the player gets too close to the player he takes damage (does not yet have a timer
+# so it does that every second during the duration of the player being inside the range of the basic robot)
+func _on_enemy_rootnode_enemy_attack():
 	take_damage(1)
-	print(\"ay\")
+	print(\"Player took damage\")
 	print(Health)
 "
 
@@ -108,7 +129,6 @@ states/Walk_down/position = Vector2(406, 82)
 graph_offset = Vector2(-156, -5)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
-position = Vector2(-18, -202)
 script = SubResource("GDScript_isu8i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -134,3 +154,26 @@ libraries = {
 tree_root = SubResource("AnimationNodeStateMachine_0cm0u")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Walk_down/blend_position = Vector2(0.214626, 0.123894)
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+anchors_preset = -1
+anchor_top = -0.218
+anchor_bottom = -0.218
+offset_left = -75.0
+offset_top = -155.0
+offset_right = 75.0
+offset_bottom = -128.0
+max_value = 10.0
+step = 1.0
+value = 5.0
+show_percentage = false
+script = ExtResource("3_h4ksh")
+
+[node name="death_screen" type="Sprite2D" parent="."]
+position = Vector2(0.499959, 0.5)
+scale = Vector2(1.19948, 1.19907)
+texture = ExtResource("4_tuknr")
+script = ExtResource("5_nksik")
+
+[connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
+[connection signal="player_health_Changed" from="." to="ProgressBar" method="_on_character_body_2d_player_health_changed"]

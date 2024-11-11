@@ -3,8 +3,10 @@ extends CharacterBody2D
 signal player_near_robot
 signal player_near_robot_exited
 signal enemy_attack()
-var init_count = 1
 
+
+
+var init_count = 1
 var close =false
 var first_bug = false
 
@@ -13,7 +15,7 @@ var direction_player_y = 0
 var speed = 0.5
 var attacking = false
 
-func _physics_process(delta: float) -> void:
+func _physics_process(delta):
 	
 	#player root
 	var player = get_parent().get_node("CharacterBody2D")
