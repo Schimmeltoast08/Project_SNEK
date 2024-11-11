@@ -1,0 +1,21 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1731161651
+basic_robot.tscn::PackedScene::6726843945537635462::1731159110::0::1::::<><>::
+::res://Entety sprites/::1731159279
+Robot_MC.png::CompressedTexture2D::2374566182893088261::1731159110::1731159279::1::::<><>::
+Robot_MC_outline.png::CompressedTexture2D::3208317611490939253::1731159110::1731159279::1::::<><>::
+screenshot-2024-10-30-18-40-38.png::CompressedTexture2D::2846209482822088792::1731159110::1731159279::1::::<><>::
+zaza.png::CompressedTexture2D::5571993599565158998::1731159110::1731159279::1::::<><>::
+::res://Entety sprites/animation sprites/::1731159279
+MC_movement.png::CompressedTexture2D::6025348178107892065::1731159110::1731159279::1::::<><>::
+::res://scenes/::1731159504
+basic_robot.gd::GDScript::-1::1731159110::0::1::::<>CharacterBody2D<>::
+basic_robot.tscn::PackedScene::7113125351565193053::1731159504::0::1::::<><>::res://scenes/basic_robot.gd<>uid://83i01mrnbsjt::::res://Entety sprites/Robot_MC.png<>uid://blyer02jjetmb::::res://Entety sprites/Robot_MC_outline.png
+basic_robot_revamped.gd::GDScript::-1::1731159110::0::1::::<>CharacterBody2D<>::
+camera_2d.gd::GDScript::-1::1731159110::0::1::::<>Camera2D<>::
+main_scene.gdshader::Shader::-1::1731159110::0::1::::<><>::
+main_scene.tscn::PackedScene::3682587824214993173::1731159504::0::1::::<><>::uid://dddj0jy148j2l::::res://scenes/player.tscn<>uid://bgsywionw74oi::::res://Entety sprites/screenshot-2024-10-30-18-40-38.png<>uid://c8lweun22mlwv::::res://scenes/basic_robot.tscn
+node_2d.gd::GDScript::-1::1731159110::0::1::::<>Node2D<>::
+path_follow_2d.gd::GDScript::-1::1731159110::0::1::::<>PathFollow2D<>::
+player.tscn::PackedScene::7376613324044940637::1731159504::0::1::::<><>::res://scenes/camera_2d.gd<>uid://cr3yusowhmcrh::::res://Entety sprites/animation sprites/MC_movement.png
+robot_check_player_near.gd::GDScript::-1::1731159110::0::1::::<>Area2D<>::
