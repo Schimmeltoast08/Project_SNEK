@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://83i01mrnbsjt"
-path="res://.godot/imported/Robot_MC.png-4141e28381581b70be71ee2b290b0129.ctex"
+uid="uid://uahyk0j2cwb7"
+path="res://.godot/imported/Tmp_death_screen.png-2b4ef31a7955a0debb282e06334f0745.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Entety sprites/Robot_MC.png"
-dest_files=["res://.godot/imported/Robot_MC.png-4141e28381581b70be71ee2b290b0129.ctex"]
+source_file="res://static sprites/Tmp_death_screen.png"
+dest_files=["res://.godot/imported/Tmp_death_screen.png-2b4ef31a7955a0debb282e06334f0745.ctex"]
 
 [params]
 

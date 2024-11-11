@@ -10,10 +10,10 @@
 position = Vector2(991, 538)
 texture = ExtResource("2_vyttv")
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
-
 [node name="enemy_root-node" parent="." instance=ExtResource("3_hlimb")]
 position = Vector2(-5.42544, 552.153)
 rotation = 0.0174401
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
 
 [connection signal="enemy_attack" from="enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]
