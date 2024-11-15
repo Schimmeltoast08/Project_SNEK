@@ -35,6 +35,15 @@ func _physics_process(delta):
 		move_and_slide()
 	# /movement
 
+
+# make it so when the player gets too close to the player he takes damage (does not yet have a timer
+# so it does that every second during the duration of the player being inside the range of the basic robot)
+func _on_enemy_rootnode_enemy_attack():
+	take_damage(1)
+	print(\"Player took damage. Remaining: \", Health)
+	
+
+
 # manages player health
 func take_damage(damage):
 	player_health_Changed.emit(Health, maximum_player_health)
@@ -45,13 +54,6 @@ func take_damage(damage):
 			print(\"you dead\")
 			player_died.emit()
 			
-
-# make it so when the player gets too close to the player he takes damage (does not yet have a timer
-# so it does that every second during the duration of the player being inside the range of the basic robot)
-func _on_enemy_rootnode_enemy_attack():
-	take_damage(1)
-	print(\"Player took damage\")
-	print(Health)
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
