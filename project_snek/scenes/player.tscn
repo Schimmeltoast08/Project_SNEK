@@ -9,9 +9,6 @@
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
 
-#SPEED
-var speed = 600.0
-
 # this goes into the health bar called \"Progress bar\" to indicate that it needs to update (saves recources)
 signal player_health_Changed
 
@@ -19,34 +16,49 @@ signal player_died
 
 # maximum player health
 @export var maximum_player_health = 10
-
+var getting_attacked = false
+var immunity_frame = true
 # current player health
 @export var Health = 10
 
 # status if player is alive
 var alive = true
 
-# movement
-
+# <movement>
+@export var speed = 600.0
 var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
-const Jump_Velocity = -600
+@export_range(0,1) var deceleration = 0.2
+@export_range(0,1) var acceleration = 0.2
+@export var jump_force = -600.0
+@export_range(0,1) var deceleration_on_jump_release = 0.5
+@export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
 
 func _physics_process(delta):
 	
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-	if Input.is_action_just_pressed(\"button_space\") and is_on_floor():
-		velocity.y = Jump_Velocity
+	if Input.is_action_just_pressed(\"button_space\") and (is_on_floor() or is_on_wall()) and max_walljump > 0:
+		velocity.y = jump_force
+		max_walljump -= 1
+		
+		
+		
+	if is_on_floor(): 
+		max_walljump = 2
+		
+		
+	if Input.is_action_just_released(\"button_space\") and velocity.y < 0:
+		velocity.y *= deceleration_on_jump_release
 
 	var direction = Input.get_axis(\"button_a\", \"button_d\")
 	if direction:
-		velocity.x = direction * speed
+		velocity.x = move_toward(velocity.x,direction * speed, speed * acceleration)
 	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
+		velocity.x = move_toward(velocity.x, 0, speed * deceleration) # if you put \"delta\" instead of \"speed\" it turns into an ice level
 	move_and_slide()
 
-# /movement
+# </movement>
 
 # make it so when the player gets too close to the player he takes damage (does not yet have a timer
 # so it does that every second during the duration of the player being inside the range of the basic robot)
@@ -69,7 +81,9 @@ func take_damage(damage):
 			gravity = 0
 			velocity = Vector2(0,0)
 			$Camera2D.position_smoothing_enabled = false
-			
+			deceleration = 1
+			jump_force = 0
+		
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
@@ -148,6 +162,7 @@ graph_offset = Vector2(-156, -5)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = SubResource("GDScript_isu8i")
+max_walljump = -2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -9)
