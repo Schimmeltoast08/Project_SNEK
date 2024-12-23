@@ -1,8 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://bsp4xibu18oo0"]
+[gd_scene load_steps=7 format=3 uid="uid://bsp4xibu18oo0"]
 
 [ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
 [ext_resource type="Texture2D" uid="uid://bgsywionw74oi" path="res://Entety sprites/screenshot-2024-10-30-18-40-38.png" id="2_vyttv"]
 [ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
+[ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_1628b"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vi77q"]
+distance = -742.965
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6om2b"]
+size = Vector2(1088, 20)
 
 [node name="main" type="Node2D"]
 
@@ -11,9 +18,29 @@ position = Vector2(991, 538)
 texture = ExtResource("2_vyttv")
 
 [node name="enemy_root-node" parent="." instance=ExtResource("3_hlimb")]
-position = Vector2(-5.42544, 552.153)
+position = Vector2(7.62939e-06, 1072)
 rotation = 0.0174401
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(-5.42544, 552.153)
+rotation = 0.0174401
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+position = Vector2(29.0695, -192.689)
+shape = SubResource("WorldBoundaryShape2D_vi77q")
+
+[node name="temp_test_platform" type="StaticBody2D" parent="."]
+position = Vector2(0, 200)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="temp_test_platform"]
+position = Vector2(825, 899)
+shape = SubResource("RectangleShape2D_6om2b")
+
+[node name="Sprite2D" type="Sprite2D" parent="temp_test_platform"]
+position = Vector2(826.5, 899)
+scale = Vector2(0.567188, 0.0203703)
+texture = ExtResource("4_1628b")
 
 [connection signal="enemy_attack" from="enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]

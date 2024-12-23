@@ -24,13 +24,10 @@ func _physics_process(delta):
 		direction_player_x=speed
 	else:
 		direction_player_x=-speed
-	if player.position.y > position.y:
-		direction_player_y=speed
-	else:
-		direction_player_y=-speed
+	
 	#makes the enemy follow the player if its not attacking
-	if attacking ==false:
-		if close==true:
+	if attacking == false:
+		if close == true:
 			var direction = Vector2(direction_player_x, direction_player_y)
 			velocity = velocity.normalized()
 			velocity = direction * 600

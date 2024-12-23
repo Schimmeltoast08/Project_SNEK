@@ -10,7 +10,7 @@
 script/source = "extends CharacterBody2D
 
 #SPEED
-var SPEED = 600.0
+var speed = 600.0
 
 # this goes into the health bar called \"Progress bar\" to indicate that it needs to update (saves recources)
 signal player_health_Changed
@@ -26,15 +26,27 @@ signal player_died
 # status if player is alive
 var alive = true
 
+# movement
+
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+const Jump_Velocity = -600
 
 func _physics_process(delta):
-	if(alive): # movement if player is alive, if he is dead then no more movement
-		var direction := Input.get_vector(\"button_a\", \"button_d\", \"button_w\", \"button_s\")
-		velocity = velocity.normalized()
-		velocity = direction * SPEED
-		move_and_slide()
-	# /movement
+	
+	if not is_on_floor():
+		velocity.y += gravity * delta
 
+	if Input.is_action_just_pressed(\"button_space\") and is_on_floor():
+		velocity.y = Jump_Velocity
+
+	var direction = Input.get_axis(\"button_a\", \"button_d\")
+	if direction:
+		velocity.x = direction * speed
+	else:
+		velocity.x = move_toward(velocity.x, 0, speed)
+	move_and_slide()
+
+# /movement
 
 # make it so when the player gets too close to the player he takes damage (does not yet have a timer
 # so it does that every second during the duration of the player being inside the range of the basic robot)
@@ -53,6 +65,10 @@ func take_damage(damage):
 			alive=false
 			print(\"you dead\")
 			player_died.emit()
+			speed = 0
+			gravity = 0
+			velocity = Vector2(0,0)
+			$Camera2D.position_smoothing_enabled = false
 			
 "
 

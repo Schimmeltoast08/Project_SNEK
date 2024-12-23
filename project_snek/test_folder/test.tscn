@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw5pcp3vcamxj"]
+
+[ext_resource type="Script" path="res://character_body_2d.gd" id="1_ajvq0"]
+[ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="2_gjk3c"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1m2vv"]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_ajvq0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_gjk3c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1m2vv")
