@@ -3,10 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://c645jjh1nxsa6" path="res://static sprites/tmp_bg.png" id="1_6rov2"]
 [ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
 [ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
-[ext_resource type="Texture2D" uid="uid://ih4d6uyen2vt" path="res://static sprites/tmp_black_png.png" id="4_e3msa"]
+[ext_resource type="Texture2D" uid="uid://ih4d6uyen2vt" path="res://static sprites/solid_colors/tmp_black_png.png" id="4_e3msa"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vi77q"]
-distance = -742.965
+distance = -749.113
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6om2b"]
 size = Vector2(3949, 37)
@@ -20,7 +20,7 @@ scale = Vector2(35.61, 22.72)
 texture = ExtResource("1_6rov2")
 
 [node name="enemy_root-node" parent="." instance=ExtResource("3_hlimb")]
-position = Vector2(7.62939e-06, 1072)
+position = Vector2(-144, 951)
 rotation = 0.0174401
 collision_layer = 3
 collision_mask = 5
@@ -34,6 +34,7 @@ rotation = 0.0174401
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 position = Vector2(29.0695, -192.689)
 shape = SubResource("WorldBoundaryShape2D_vi77q")
+debug_color = Color(0.902821, 0.234519, 0.510612, 0.42)
 
 [node name="temp_test_platform" type="StaticBody2D" parent="."]
 position = Vector2(1985, 1138)

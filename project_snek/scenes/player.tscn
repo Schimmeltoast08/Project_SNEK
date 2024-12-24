@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=10 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
@@ -106,7 +106,9 @@ func take_damage(damage):
 			jump_force = 0
 		
 
-### Teleport
+# <Teleport>
+func wait(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
 
 
 func teleport_to(new_position: Vector2):
@@ -120,16 +122,14 @@ func teleport_to(new_position: Vector2):
 		print(\"Teleporting to:\", new_position)
 		$Sprite2D.visible = false
 		$Sprite2D2.visible = true
-		await get_tree().create_timer(0.25).timeout  # 250ms delay  #just fancy trying to make the teleport look better/otional
+		await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
 		global_position = new_position
 		$Sprite2D.visible = true
 		$Sprite2D2.visible = false
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 	
 	
-
-	
-###
+# </Teleport>
 
 
 
@@ -144,75 +144,7 @@ func teleport_to(new_position: Vector2):
 radius = 32.0
 height = 206.0
 
-[sub_resource type="Animation" id="Animation_fdj5p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
-
-[sub_resource type="Animation" id="Animation_632s8"]
-resource_name = "down"
-length = 0.8
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.333333, 0.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [1, 1, 1, 2]
-}
-
-[sub_resource type="Animation" id="Animation_jxst4"]
-resource_name = "down_animation"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nnkji"]
-_data = {
-"RESET": SubResource("Animation_fdj5p"),
-"down": SubResource("Animation_632s8"),
-"down_animation": SubResource("Animation_jxst4")
-}
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_otnyh"]
-animation = &"down"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mk2vb"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_juyjf"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2u245"]
-animation = &"down_animation"
-
-[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_5e5pq"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_otnyh")
-blend_point_0/pos = Vector2(0, -0.9)
-blend_point_1/node = SubResource("AnimationNodeAnimation_mk2vb")
-blend_point_1/pos = Vector2(-1, 0)
-blend_point_2/node = SubResource("AnimationNodeAnimation_juyjf")
-blend_point_2/pos = Vector2(0, 0.9)
-blend_point_3/node = SubResource("AnimationNodeAnimation_2u245")
-blend_point_3/pos = Vector2(1, 0)
-blend_mode = 1
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_0cm0u"]
-states/Walk_down/node = SubResource("AnimationNodeBlendSpace2D_5e5pq")
-states/Walk_down/position = Vector2(406, 82)
-graph_offset = Vector2(-156, -5)
+[sub_resource type="Theme" id="Theme_1smr3"]
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 collision_mask = 6
@@ -233,31 +165,8 @@ texture = ExtResource("2_ylaxq")
 hframes = 3
 frame = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_nnkji")
-}
-
-[node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeStateMachine_0cm0u")
-anim_player = NodePath("../AnimationPlayer")
-parameters/Walk_down/blend_position = Vector2(0.214626, 0.123894)
-
-[node name="ProgressBar" type="ProgressBar" parent="."]
-anchors_preset = -1
-anchor_top = -0.218
-anchor_bottom = -0.218
-offset_left = -75.0
-offset_top = -155.0
-offset_right = 75.0
-offset_bottom = -128.0
-max_value = 10.0
-step = 1.0
-value = 5.0
-show_percentage = false
-script = ExtResource("3_h4ksh")
-
 [node name="death_screen" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(0.499959, 0.5)
 scale = Vector2(1.19948, 1.19907)
 texture = ExtResource("4_tuknr")
@@ -267,5 +176,26 @@ script = ExtResource("5_nksik")
 visible = false
 texture = ExtResource("6_lrwgo")
 
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD" node_paths=PackedStringArray("player")]
+anchors_preset = -1
+anchor_left = -26.913
+anchor_top = 17.837
+anchor_right = -13.326
+anchor_bottom = 20.065
+offset_left = 31005.8
+offset_top = -11557.4
+offset_right = 15697.6
+offset_bottom = -12972.1
+theme = SubResource("Theme_1smr3")
+max_value = 10.0
+step = 1.0
+value = 5.0
+allow_greater = true
+show_percentage = false
+script = ExtResource("3_h4ksh")
+player = NodePath("../..")
+
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
-[connection signal="player_health_Changed" from="." to="ProgressBar" method="_on_character_body_2d_player_health_changed"]
+[connection signal="player_health_Changed" from="." to="HUD/ProgressBar" method="_on_character_body_2d_player_health_changed"]
