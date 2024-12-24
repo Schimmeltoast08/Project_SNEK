@@ -25,13 +25,14 @@ func _physics_process(delta):
 	else:
 		direction_player_x=-speed
 	
+	
+	
 	#makes the enemy follow the player if its not attacking
-	if attacking == false:
-		if close == true:
-			var direction = Vector2(direction_player_x, direction_player_y)
-			velocity = velocity.normalized()
-			velocity = direction * 600
-			move_and_slide()
+	if attacking == false and close == true:
+		var direction = Vector2(direction_player_x, direction_player_y)
+		velocity = velocity.normalized()
+		velocity = direction * 600
+		move_and_slide()
 		
 
 
@@ -43,26 +44,32 @@ func _on_area_near_body_entered(body):
 		close=true
 	else:
 		first_bug=true
+
+var atk_allowed = false
 	
-	
-	
-	
-	
+func _process(delta: float) -> void:
+	if attacking and atk_allowed == true:
+		atk_allowed = false
+		enemy_attack.emit()
+		$attack_timer.start
 
 func _on_area_near_body_exited(body):
 	player_near_robot_exited.emit()
 	$border.visible = false
 	close=false
 		
-		
-	
-	
-
+# ---------------------------------------------------------------------------------------------
+func wait(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
+#-------------------------------------------------- Good Function for all Nodes ---------------	
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
-	enemy_attack.emit()
 	attacking = true
-
+	$attack_timer.start()
+	
 
 func _on_attack_area_body_exited(body: Node2D) -> void:
 	attacking = false
+	
+func _on_attack_timer_timeout() -> void:
+	atk_allowed = true
