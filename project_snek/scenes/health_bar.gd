@@ -3,6 +3,8 @@ extends ProgressBar
 
 @export var player: CharacterBody2D
 
+func _ready() -> void:
+	value = 10
  
 func _on_character_body_2d_player_health_changed(Health, maximum_player_health):
 	

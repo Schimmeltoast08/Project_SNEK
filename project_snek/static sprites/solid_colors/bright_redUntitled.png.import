@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ih4d6uyen2vt"
-path="res://.godot/imported/tmp_black_png.png-9ea637cd7f1e9c2c6f3e3dfe53e62ef9.ctex"
+uid="uid://ca6ij1fl0sjop"
+path="res://.godot/imported/bright_redUntitled.png-83c037539d54aae25f1523e41f6e6de5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://static sprites/tmp_black_png.png"
-dest_files=["res://.godot/imported/tmp_black_png.png-9ea637cd7f1e9c2c6f3e3dfe53e62ef9.ctex"]
+source_file="res://static sprites/solid_colors/bright_redUntitled.png"
+dest_files=["res://.godot/imported/bright_redUntitled.png-83c037539d54aae25f1523e41f6e6de5.ctex"]
 
 [params]
 
