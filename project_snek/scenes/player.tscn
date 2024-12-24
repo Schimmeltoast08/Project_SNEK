@@ -1,4 +1,5 @@
-[gd_scene load_steps=10 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=19 format=3 uid="uid://dddj0jy148j2l"]
+
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
@@ -106,9 +107,13 @@ func take_damage(damage):
 			jump_force = 0
 		
 
+
 # <Teleport>
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
+
+### Teleport
+
 
 
 func teleport_to(new_position: Vector2):
@@ -122,14 +127,15 @@ func teleport_to(new_position: Vector2):
 		print(\"Teleporting to:\", new_position)
 		$Sprite2D.visible = false
 		$Sprite2D2.visible = true
+
 		await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
+		
+
 		global_position = new_position
 		$Sprite2D.visible = true
 		$Sprite2D2.visible = false
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 	
-	
-# </Teleport>
 
 
 
@@ -196,6 +202,10 @@ allow_greater = true
 show_percentage = false
 script = ExtResource("3_h4ksh")
 player = NodePath("../..")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("6_lrwgo")
 
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
 [connection signal="player_health_Changed" from="." to="HUD/ProgressBar" method="_on_character_body_2d_player_health_changed"]
