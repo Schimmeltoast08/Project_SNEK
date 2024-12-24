@@ -1,5 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://dddj0jy148j2l"]
-
+[gd_scene load_steps=10 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
@@ -19,12 +18,19 @@ signal player_died
 # maximum player health
 @export var maximum_player_health = 10
 var getting_attacked = false
-var immunity_frame = true
+
 # current player health
 @export var Health = 10
 
 # status if player is alive
 var alive = true
+
+#----------------- usefull general functios -------------
+# in this codeblock are functions that are usefull but godot does not have, like \"wait 4 seconds\"
+func wait(seconds: float) -> void:
+	await get_tree().create_timer(seconds).timeout
+#--------------------------------------------------------
+
 
 # <movement>
 @export var speed = 600.0
@@ -34,30 +40,13 @@ var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 @export var jump_force = -600.0
 @export_range(0,1) var deceleration_on_jump_release = 0.5
 @export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
+var invulnerable = false
+
+
+
+
 
 func _physics_process(delta):
-	
-### teleport
-
-	if Input.is_action_just_pressed(\"mouse_RC\"):
-		var dir = 0 # if you walk right or left
-		if(velocity.x>0):
-			dir=1  #right
-		elif(velocity.x<0):
-			dir=-1 #left
-		else:
-			return
-		print(\"move\")
-		$Sprite2D.visible=false
-		$Sprite2D2.visible=true  # makes player invisible inbetween teleport
-		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
-		await get_tree().create_timer(0.25).timeout  # 0.25 seconds delay (250ms)s)
-		
-		$Sprite2D.visible=true
-		$Sprite2D2.visible=false
-#######
-
-	
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
@@ -82,38 +71,24 @@ func _physics_process(delta):
 
 # </movement>
 
-# make it so when the player gets too close to the player he takes damage (does not yet have a timer
-# so it does that every second during the duration of the player being inside the range of the basic robot)
-func _on_enemy_rootnode_enemy_attack():
-	take_damage(1)
-	print(\"Player took damage. Remaining: \", Health)
-	
-
-
-# manages player health
-func take_damage(damage):
-	player_health_Changed.emit(Health, maximum_player_health)
-	if alive:
-		Health-=damage
-		if Health<=0:
-			alive=false
-			print(\"you dead\")
-			player_died.emit()
-			speed = 0
-			gravity = 0
-			velocity = Vector2(0,0)
-			$Camera2D.position_smoothing_enabled = false
-			deceleration = 1
-			jump_force = 0
-		
-
-
-# <Teleport>
-func wait(seconds: float) -> void:
-	await get_tree().create_timer(seconds).timeout
-
-### Teleport
-
+# <teleport>
+	if Input.is_action_just_pressed(\"mouse_RC\"):
+		var dir = 0 # if you walk right or left
+		if(velocity.x>0):
+			dir=1  #right
+		elif(velocity.x<0):
+			dir=-1 #left
+		else:
+			return
+		#print(\"move\")
+		$Sprite2D.visible=false
+		$Sprite2D2.visible=true  # makes player invisible inbetween teleport
+		invulnerable = true
+		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
+		await wait(0.25)  # 0.25 seconds delay (250ms)s)
+		invulnerable = false
+		$Sprite2D.visible=true
+		$Sprite2D2.visible=false
 
 
 func teleport_to(new_position: Vector2):
@@ -135,15 +110,34 @@ func teleport_to(new_position: Vector2):
 		$Sprite2D.visible = true
 		$Sprite2D2.visible = false
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
+#</teleport>
+	
+#<attack and health>
+func _on_enemy_rootnode_enemy_attack():
+	if invulnerable == false:
+		take_damage(1)
+	print(\"Player took damage. Remaining: \", Health)
 	
 
 
 
-
-
-
-
-	
+# manages player health
+func take_damage(damage):
+	player_health_Changed.emit(Health, maximum_player_health)
+	if alive:
+		Health-=damage
+		if Health<=0:
+			alive=false
+			print(\"you dead\")
+			player_died.emit()
+			speed = 0
+			gravity = 0
+			velocity = Vector2(0,0)
+			$Camera2D.position_smoothing_enabled = false
+			deceleration = 1
+			jump_force = 0
+		
+#</attack and health>
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
@@ -203,7 +197,7 @@ show_percentage = false
 script = ExtResource("3_h4ksh")
 player = NodePath("../..")
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
+[node name="Sprite2D3" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("6_lrwgo")
 
