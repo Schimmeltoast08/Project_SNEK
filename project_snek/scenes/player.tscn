@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=19 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
 [ext_resource type="Script" path="res://scenes/health_bar.gd" id="3_h4ksh"]
 [ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_tuknr"]
 [ext_resource type="Script" path="res://scenes/death_screen.gd" id="5_nksik"]
+[ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Entety sprites/Player/Robot_MC_outline.png" id="6_lrwgo"]
 
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
@@ -35,15 +36,39 @@ var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 
 func _physics_process(delta):
 	
+### teleport
+
+	if Input.is_action_just_pressed(\"mouse_RC\"):
+		var dir = 0
+		
+		
+		if(velocity.x>0):
+			dir=1
+		elif(velocity.x<0):
+			dir=-1
+		else:
+			return
+		print(\"move\")
+			
+		
+		$Sprite2D.visible=false
+		$Sprite2D2.visible=true
+		teleport_to(position+Vector2(500*dir,0))
+		await get_tree().create_timer(0.25).timeout  # 0.25 seconds delay (250ms)s)
+		
+		$Sprite2D.visible=true
+		$Sprite2D2.visible=false
+#######
+
+	
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	if Input.is_action_just_pressed(\"button_space\") and (is_on_floor() or is_on_wall()) and max_walljump > 0:
 		velocity.y = jump_force
 		max_walljump -= 1
-		
-		
-		
+
+	
 	if is_on_floor(): 
 		max_walljump = 2
 		
@@ -84,6 +109,33 @@ func take_damage(damage):
 			deceleration = 1
 			jump_force = 0
 		
+
+### Teleport
+
+func teleport_to(new_position:Vector2):
+	var raycast = $RayCast2D
+	raycast.global_position= global_position
+	raycast.enabled=true
+	
+	if raycast.is_colliding():
+		print(\"Blocked\")
+		raycast.enabled=false
+	else:
+		position= new_position
+		await get_tree().create_timer(0.1).timeout  # 0.25 seconds delay (250ms)s)aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+		position= new_position
+	
+	raycast.enabled=false
+	
+###
+
+
+
+
+
+
+
+	
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
@@ -207,6 +259,13 @@ position = Vector2(0.499959, 0.5)
 scale = Vector2(1.19948, 1.19907)
 texture = ExtResource("4_tuknr")
 script = ExtResource("5_nksik")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = false
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("6_lrwgo")
 
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
 [connection signal="player_health_Changed" from="." to="ProgressBar" method="_on_character_body_2d_player_health_changed"]
