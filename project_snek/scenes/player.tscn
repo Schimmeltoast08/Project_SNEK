@@ -41,7 +41,7 @@ var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 @export_range(0,1) var deceleration_on_jump_release = 0.5
 @export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
 var invulnerable = false
-
+var teleport_cooldown = false # true means you CAN'T teleport
 
 
 
@@ -58,7 +58,6 @@ func _physics_process(delta):
 	if is_on_floor(): 
 		max_walljump = 2
 		
-		
 	if Input.is_action_just_released(\"button_space\") and velocity.y < 0:
 		velocity.y *= deceleration_on_jump_release
 
@@ -72,8 +71,9 @@ func _physics_process(delta):
 # </movement>
 
 # <teleport>
-	if Input.is_action_just_pressed(\"mouse_RC\"):
+	if Input.is_action_just_pressed(\"mouse_RC\") and teleport_cooldown == false:
 		var dir = 0 # if you walk right or left
+		teleport_cooldown = true
 		if(velocity.x>0):
 			dir=1  #right
 		elif(velocity.x<0):
@@ -82,14 +82,19 @@ func _physics_process(delta):
 			return
 		#print(\"move\")
 		$Sprite2D.visible=false
-		$Sprite2D2.visible=true  # makes player invisible inbetween teleport
+		$Sprite2D2.visible=true  # makes player invisible inbetween teleportd
 		invulnerable = true
 		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
-		await wait(0.25)  # 0.25 seconds delay (250ms)s)
-		invulnerable = false
+		await wait(0.25)  # 0.25 seconds delay (250ms)s)	
+		teleport_cooldown = true
 		$Sprite2D.visible=true
 		$Sprite2D2.visible=false
+		invulnerable = false
+		teleport_cooldown_func(2)
 
+func teleport_cooldown_func(seconds):
+	await wait(seconds)
+	teleport_cooldown = false
 
 func teleport_to(new_position: Vector2):
 	# Check if moving to the new position will collide with any object
@@ -105,7 +110,6 @@ func teleport_to(new_position: Vector2):
 
 		await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
 		
-
 		global_position = new_position
 		$Sprite2D.visible = true
 		$Sprite2D2.visible = false
@@ -114,7 +118,7 @@ func teleport_to(new_position: Vector2):
 	
 #<attack and health>
 func _on_enemy_rootnode_enemy_attack():
-	if invulnerable == false:
+	if invulnerable == false: # for when teleporting and other immunity frames
 		take_damage(1)
 	print(\"Player took damage. Remaining: \", Health)
 	
