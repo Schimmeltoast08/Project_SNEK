@@ -39,21 +39,17 @@ func _physics_process(delta):
 ### teleport
 
 	if Input.is_action_just_pressed(\"mouse_RC\"):
-		var dir = 0
-		
-		
+		var dir = 0 # if you walk right or left
 		if(velocity.x>0):
-			dir=1
+			dir=1  #right
 		elif(velocity.x<0):
-			dir=-1
+			dir=-1 #left
 		else:
 			return
 		print(\"move\")
-			
-		
 		$Sprite2D.visible=false
-		$Sprite2D2.visible=true
-		teleport_to(position+Vector2(500*dir,0))
+		$Sprite2D2.visible=true  # makes player invisible inbetween teleport
+		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
 		await get_tree().create_timer(0.25).timeout  # 0.25 seconds delay (250ms)s)
 		
 		$Sprite2D.visible=true
@@ -112,20 +108,26 @@ func take_damage(damage):
 
 ### Teleport
 
-func teleport_to(new_position:Vector2):
-	var raycast = $RayCast2D
-	raycast.global_position= global_position
-	raycast.enabled=true
-	
-	if raycast.is_colliding():
-		print(\"Blocked\")
-		raycast.enabled=false
+
+func teleport_to(new_position: Vector2):
+	# Check if moving to the new position will collide with any object
+	collision_mask = 4 # Makes the player able to teleport trough enemies
+	var collision = test_move(global_transform, new_position - global_position)
+	 
+	if collision:  # collision with mask 3
+		print(\"Blocked, cannot teleport to:\", new_position)
 	else:
-		position= new_position
-		await get_tree().create_timer(0.1).timeout  # 0.25 seconds delay (250ms)s)aaaaaaaaaaaaaaaaaaaaaaaaaaaa
-		position= new_position
+		print(\"Teleporting to:\", new_position)
+		$Sprite2D.visible = false
+		$Sprite2D2.visible = true
+		await get_tree().create_timer(0.25).timeout  # 250ms delay  #just fancy trying to make the teleport look better/otional
+		global_position = new_position
+		$Sprite2D.visible = true
+		$Sprite2D2.visible = false
+	collision_mask = 6 # Make the player able to collide with enemy after teleport
 	
-	raycast.enabled=false
+	
+
 	
 ###
 
@@ -213,6 +215,7 @@ states/Walk_down/position = Vector2(406, 82)
 graph_offset = Vector2(-156, -5)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
+collision_mask = 6
 script = SubResource("GDScript_isu8i")
 max_walljump = -2
 
@@ -259,9 +262,6 @@ position = Vector2(0.499959, 0.5)
 scale = Vector2(1.19948, 1.19907)
 texture = ExtResource("4_tuknr")
 script = ExtResource("5_nksik")
-
-[node name="RayCast2D" type="RayCast2D" parent="."]
-enabled = false
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
 visible = false
