@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=9 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
@@ -24,6 +24,7 @@ var getting_attacked = false
 
 # status if player is alive
 var alive = true
+
 
 #----------------- usefull general functios -------------
 # in this codeblock are functions that are usefull but godot does not have, like \"wait 4 seconds\"
@@ -148,8 +149,6 @@ func take_damage(damage):
 radius = 32.0
 height = 206.0
 
-[sub_resource type="Theme" id="Theme_1smr3"]
-
 [node name="CharacterBody2D" type="CharacterBody2D"]
 collision_mask = 6
 script = SubResource("GDScript_isu8i")
@@ -190,11 +189,10 @@ anchor_right = -13.326
 anchor_bottom = 20.065
 offset_left = 31005.8
 offset_top = -11557.4
-offset_right = 15697.6
-offset_bottom = -12972.1
-theme = SubResource("Theme_1smr3")
+offset_right = 15681.6
+offset_bottom = -12970.1
 max_value = 10.0
-step = 1.0
+step = 0.2
 value = 5.0
 allow_greater = true
 show_percentage = false
