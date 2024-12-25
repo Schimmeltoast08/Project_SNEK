@@ -29,6 +29,7 @@ position = Vector2(0, -13)
 shape = SubResource("CapsuleShape2D_drhvn")
 
 [node name="area_near" type="Area2D" parent="."]
+scale = Vector2(2, 2)
 
 [node name="shape_of_area_near" type="CollisionShape2D" parent="area_near"]
 position = Vector2(2, -4)

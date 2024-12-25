@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=11 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
-[ext_resource type="Script" path="res://scenes/health_bar.gd" id="3_h4ksh"]
 [ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_tuknr"]
 [ext_resource type="Script" path="res://scenes/death_screen.gd" id="5_nksik"]
 [ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Entety sprites/Player/Robot_MC_outline.png" id="6_lrwgo"]
@@ -10,40 +9,34 @@
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
 
-# this goes into the health bar called \"Progress bar\" to indicate that it needs to update (saves recources)
 signal player_health_Changed
-
 signal player_died
 
-# maximum player health
-@export var maximum_player_health = 10
+@onready var health_bar = $HUD/HealthBar
+
+@export var maximum_player_health = 100 # maximum player health
+@export var health = 100 # current player health
 var getting_attacked = false
-
-# current player health
-@export var Health = 10
-
-# status if player is alive
-var alive = true
+var alive = true # status if player is alive
 
 
-#----------------- usefull general functios -------------
+###----------------- usefull general functions -------------
 # in this codeblock are functions that are usefull but godot does not have, like \"wait 4 seconds\"
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
 #--------------------------------------------------------
 
 
-# <movement>
+### <movement>
 @export var speed = 600.0
-var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
+@export var jump_force = -600.0
+@export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
 @export_range(0,1) var deceleration = 0.2
 @export_range(0,1) var acceleration = 0.2
-@export var jump_force = -600.0
 @export_range(0,1) var deceleration_on_jump_release = 0.5
-@export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
 var invulnerable = false
 var teleport_cooldown = false # true means you CAN'T teleport
-
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 
 
 
@@ -71,7 +64,7 @@ func _physics_process(delta):
 
 # </movement>
 
-# <teleport>
+### <teleport>
 	if Input.is_action_just_pressed(\"mouse_RC\") and teleport_cooldown == false:
 		var dir = 0 # if you walk right or left
 		teleport_cooldown = true
@@ -117,21 +110,26 @@ func teleport_to(new_position: Vector2):
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 #</teleport>
 	
-#<attack and health>
+###<attack and health>
 func _on_enemy_rootnode_enemy_attack():
 	if invulnerable == false: # for when teleporting and other immunity frames
-		take_damage(1)
-	print(\"Player took damage. Remaining: \", Health)
+		for i in range(10):
+			take_damage(1)
+			await wait(0.05)
+		#health_bar.health = health
+	print(\"Player took damage. Remaining: \", health,\"%\")
 	
 
-
+var prev_health
 
 # manages player health
 func take_damage(damage):
-	player_health_Changed.emit(Health, maximum_player_health)
+	player_health_Changed.emit(health, maximum_player_health)
 	if alive:
-		Health-=damage
-		if Health<=0:
+		prev_health = health
+		health -= damage
+		health_bar.value = move_toward(health,prev_health,0.02)
+		if health<=0:
 			alive=false
 			print(\"you dead\")
 			player_died.emit()
@@ -147,7 +145,21 @@ func take_damage(damage):
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
 radius = 32.0
-height = 206.0
+height = 216.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ct4rk"]
+bg_color = Color(0.00392157, 0, 0, 0.854902)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_imami"]
+bg_color = Color(0.882353, 0.156863, 0.270588, 1)
+
+[sub_resource type="GDScript" id="GDScript_vbl6h"]
+script/source = "extends ProgressBar
+
+#func _on_character_body_2d_player_health_changed(Health, maximum_player_health):
+#	Health -= 1
+	#value = Health
+"
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 collision_mask = 6
@@ -155,7 +167,7 @@ script = SubResource("GDScript_isu8i")
 max_walljump = -2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -9)
+position = Vector2(0, -5)
 shape = SubResource("CapsuleShape2D_pkm1a")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -181,7 +193,7 @@ texture = ExtResource("6_lrwgo")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="ProgressBar" type="ProgressBar" parent="HUD" node_paths=PackedStringArray("player")]
+[node name="HealthBar" type="ProgressBar" parent="HUD"]
 anchors_preset = -1
 anchor_left = -26.913
 anchor_top = 17.837
@@ -191,17 +203,17 @@ offset_left = 31005.8
 offset_top = -11557.4
 offset_right = 15681.6
 offset_bottom = -12970.1
-max_value = 10.0
+theme_override_styles/background = SubResource("StyleBoxFlat_ct4rk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_imami")
 step = 0.2
-value = 5.0
+value = 100.0
 allow_greater = true
 show_percentage = false
-script = ExtResource("3_h4ksh")
-player = NodePath("../..")
+script = SubResource("GDScript_vbl6h")
 
 [node name="Sprite2D3" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource("6_lrwgo")
 
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
-[connection signal="player_health_Changed" from="." to="HUD/ProgressBar" method="_on_character_body_2d_player_health_changed"]
+[connection signal="player_health_Changed" from="." to="HUD/HealthBar" method="_on_character_body_2d_player_health_changed"]
