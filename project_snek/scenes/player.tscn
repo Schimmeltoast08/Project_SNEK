@@ -129,7 +129,7 @@ func take_damage(damage):
 		prev_health = health
 		health -= damage
 		health_bar.value = move_toward(health,prev_health,0.02)
-		if health<=0:
+		if health <= 0:
 			alive=false
 			print(\"you dead\")
 			player_died.emit()
