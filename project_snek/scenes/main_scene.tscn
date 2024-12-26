@@ -26,35 +26,37 @@ collision_mask = 5
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
 
-[node name="temp_test_platform" type="StaticBody2D" parent="."]
+[node name="Global_Vars" type="Node" parent="."]
+script = ExtResource("5_4yffd")
+
+[node name="TMP" type="Node" parent="."]
+
+[node name="temp_test_platform" type="StaticBody2D" parent="TMP"]
 position = Vector2(1985, 1138)
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="temp_test_platform"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TMP/temp_test_platform"]
 position = Vector2(-1434, -68)
 shape = SubResource("WorldBoundaryShape2D_8377e")
 
-[node name="Sprite2D" type="Sprite2D" parent="temp_test_platform/CollisionShape2D"]
+[node name="Sprite2D" type="Sprite2D" parent="TMP/temp_test_platform/CollisionShape2D"]
 position = Vector2(6.50007, -8.75)
 rotation = 0.0174533
 scale = Vector2(39.51, 0.365001)
 texture = ExtResource("4_e3msa")
 
-[node name="temp_test_platform2" type="StaticBody2D" parent="."]
+[node name="temp_test_platform2" type="StaticBody2D" parent="TMP"]
 position = Vector2(2310, 787)
 rotation = 1.5708
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="temp_test_platform2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TMP/temp_test_platform2"]
 shape = SubResource("RectangleShape2D_6om2b")
 
-[node name="Sprite2D" type="Sprite2D" parent="temp_test_platform2/CollisionShape2D"]
+[node name="Sprite2D" type="Sprite2D" parent="TMP/temp_test_platform2/CollisionShape2D"]
 scale = Vector2(10.87, 0.2)
 texture = ExtResource("4_e3msa")
-
-[node name="Global_Vars" type="Node" parent="."]
-script = ExtResource("5_4yffd")
 
 [connection signal="enemy_attack" from="enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]
