@@ -12,21 +12,16 @@ script/source = "extends CharacterBody2D
 signal player_health_Changed
 signal player_died
 
-@onready var health_bar = $HUD/HealthBar
 
-@export var maximum_player_health = 100 # maximum player health
-@export var health = 100 # current player health
-var getting_attacked = false
-var alive = true # status if player is alive
-
+#region General Functions
 
 ###----------------- usefull general functions -------------
 # in this codeblock are functions that are usefull but godot does not have, like \"wait 4 seconds\"
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
 #--------------------------------------------------------
-
-
+#endregion
+#region Movement Variables
 ### <movement>
 @export var speed = 600.0
 @export var jump_force = -600.0
@@ -37,8 +32,10 @@ func wait(seconds: float) -> void:
 var invulnerable = false
 var teleport_cooldown = false # true means you CAN'T teleport
 var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
-
-
+var can_extraspeed = true # on pressing q, you get a lot faster. Later turn this to false (standart) and
+							# activate it when the player unlocks the ability. Once used it enabels itself 
+#endregion
+#region Movement [WASD + Space + Walljump]
 
 func _physics_process(delta):
 	if not is_on_floor():
@@ -48,6 +45,8 @@ func _physics_process(delta):
 		velocity.y = jump_force
 		max_walljump -= 1
 
+	if Input.is_action_pressed(\"button_q\") and can_extraspeed:
+		extra_speed(300)
 	
 	if is_on_floor(): 
 		max_walljump = 2
@@ -63,8 +62,9 @@ func _physics_process(delta):
 	move_and_slide()
 
 # </movement>
+#endregion
+#region Teleport [RC]
 
-### <teleport>
 	if Input.is_action_just_pressed(\"mouse_RC\") and teleport_cooldown == false:
 		var dir = 0 # if you walk right or left
 		teleport_cooldown = true
@@ -110,7 +110,16 @@ func teleport_to(new_position: Vector2):
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 #</teleport>
 	
+#endregion
+#region Health and Attack
 ###<attack and health>
+@onready var health_bar = $HUD/HealthBar
+
+@export var maximum_player_health = 100 # maximum player health
+@export var health = 100 # current player health
+var getting_attacked = false
+var alive = true # status if player is alive
+
 func _on_enemy_rootnode_enemy_attack():
 	if invulnerable == false: # for when teleporting and other immunity frames
 		for i in range(10):
@@ -119,10 +128,10 @@ func _on_enemy_rootnode_enemy_attack():
 		#health_bar.health = health
 	print(\"Player took damage. Remaining: \", health,\"%\")
 	
-
+	
+# manages player health
 var prev_health
 
-# manages player health
 func take_damage(damage):
 	player_health_Changed.emit(health, maximum_player_health)
 	if alive:
@@ -141,6 +150,21 @@ func take_damage(damage):
 			jump_force = 0
 		
 #</attack and health>
+#endregion
+#region Speed ability [Q]
+
+### <Speed Ability> ###
+func extra_speed(number):
+	speed += number
+	can_extraspeed = false
+	#print(\"activatd speed\")
+	await wait(8)
+	#print(\"DE-activated speed\")
+	speed -= number
+	await wait(16)
+	can_extraspeed = true
+	
+#endregion
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
