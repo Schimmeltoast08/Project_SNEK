@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://dddj0jy148j2l"]
+[gd_scene load_steps=19 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
 [ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
+[ext_resource type="Script" path="res://scenes/health_bar.gd" id="3_h4ksh"]
 [ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_tuknr"]
 [ext_resource type="Script" path="res://scenes/death_screen.gd" id="5_nksik"]
 [ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Entety sprites/Player/Robot_MC_outline.png" id="6_lrwgo"]
@@ -9,38 +10,53 @@
 [sub_resource type="GDScript" id="GDScript_isu8i"]
 script/source = "extends CharacterBody2D
 
+# this goes into the health bar called \"Progress bar\" to indicate that it needs to update (saves recources)
 signal player_health_Changed
+
 signal player_died
 
-@onready var health_bar = $HUD/HealthBar
-
-@export var maximum_player_health = 100 # maximum player health
-@export var health = 100 # current player health
+# maximum player health
+@export var maximum_player_health = 10
 var getting_attacked = false
-var alive = true # status if player is alive
+var immunity_frame = true
+# current player health
+@export var Health = 10
 
+# status if player is alive
+var alive = true
 
-###----------------- usefull general functions -------------
-# in this codeblock are functions that are usefull but godot does not have, like \"wait 4 seconds\"
-func wait(seconds: float) -> void:
-	await get_tree().create_timer(seconds).timeout
-#--------------------------------------------------------
-
-
-### <movement>
+# <movement>
 @export var speed = 600.0
-@export var jump_force = -600.0
-@export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
+var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 @export_range(0,1) var deceleration = 0.2
 @export_range(0,1) var acceleration = 0.2
+@export var jump_force = -600.0
 @export_range(0,1) var deceleration_on_jump_release = 0.5
-var invulnerable = false
-var teleport_cooldown = false # true means you CAN'T teleport
-var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
-
-
+@export var max_walljump = 2 # remember to set it to \"is_on_floor()\" too ( a few lines down) 
 
 func _physics_process(delta):
+	
+### teleport
+
+	if Input.is_action_just_pressed(\"mouse_RC\"):
+		var dir = 0 # if you walk right or left
+		if(velocity.x>0):
+			dir=1  #right
+		elif(velocity.x<0):
+			dir=-1 #left
+		else:
+			return
+		print(\"move\")
+		$Sprite2D.visible=false
+		$Sprite2D2.visible=true  # makes player invisible inbetween teleport
+		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
+		await get_tree().create_timer(0.25).timeout  # 0.25 seconds delay (250ms)s)
+		
+		$Sprite2D.visible=true
+		$Sprite2D2.visible=false
+#######
+
+	
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
@@ -51,6 +67,7 @@ func _physics_process(delta):
 	
 	if is_on_floor(): 
 		max_walljump = 2
+		
 		
 	if Input.is_action_just_released(\"button_space\") and velocity.y < 0:
 		velocity.y *= deceleration_on_jump_release
@@ -64,31 +81,33 @@ func _physics_process(delta):
 
 # </movement>
 
-### <teleport>
-	if Input.is_action_just_pressed(\"mouse_RC\") and teleport_cooldown == false:
-		var dir = 0 # if you walk right or left
-		teleport_cooldown = true
-		if(velocity.x>0):
-			dir=1  #right
-		elif(velocity.x<0):
-			dir=-1 #left
-		else:
-			return
-		#print(\"move\")
-		$Sprite2D.visible=false
-		$Sprite2D2.visible=true  # makes player invisible inbetween teleportd
-		invulnerable = true
-		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
-		await wait(0.25)  # 0.25 seconds delay (250ms)s)	
-		teleport_cooldown = true
-		$Sprite2D.visible=true
-		$Sprite2D2.visible=false
-		invulnerable = false
-		teleport_cooldown_func(2)
+# make it so when the player gets too close to the player he takes damage (does not yet have a timer
+# so it does that every second during the duration of the player being inside the range of the basic robot)
+func _on_enemy_rootnode_enemy_attack():
+	take_damage(1)
+	print(\"Player took damage. Remaining: \", Health)
+	
 
-func teleport_cooldown_func(seconds):
-	await wait(seconds)
-	teleport_cooldown = false
+
+# manages player health
+func take_damage(damage):
+	player_health_Changed.emit(Health, maximum_player_health)
+	if alive:
+		Health-=damage
+		if Health<=0:
+			alive=false
+			print(\"you dead\")
+			player_died.emit()
+			speed = 0
+			gravity = 0
+			velocity = Vector2(0,0)
+			$Camera2D.position_smoothing_enabled = false
+			deceleration = 1
+			jump_force = 0
+		
+
+### Teleport
+
 
 func teleport_to(new_position: Vector2):
 	# Check if moving to the new position will collide with any object
@@ -101,65 +120,99 @@ func teleport_to(new_position: Vector2):
 		print(\"Teleporting to:\", new_position)
 		$Sprite2D.visible = false
 		$Sprite2D2.visible = true
-
-		await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
-		
+		await get_tree().create_timer(0.25).timeout  # 250ms delay  #just fancy trying to make the teleport look better/otional
 		global_position = new_position
 		$Sprite2D.visible = true
 		$Sprite2D2.visible = false
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
-#</teleport>
 	
-###<attack and health>
-func _on_enemy_rootnode_enemy_attack():
-	if invulnerable == false: # for when teleporting and other immunity frames
-		for i in range(10):
-			take_damage(1)
-			await wait(0.05)
-		#health_bar.health = health
-	print(\"Player took damage. Remaining: \", health,\"%\")
 	
 
-var prev_health
+	
+###
 
-# manages player health
-func take_damage(damage):
-	player_health_Changed.emit(health, maximum_player_health)
-	if alive:
-		prev_health = health
-		health -= damage
-		health_bar.value = move_toward(health,prev_health,0.02)
-		if health <= 0:
-			alive=false
-			print(\"you dead\")
-			player_died.emit()
-			speed = 0
-			gravity = 0
-			velocity = Vector2(0,0)
-			$Camera2D.position_smoothing_enabled = false
-			deceleration = 1
-			jump_force = 0
-		
-#</attack and health>
+
+
+
+
+
+
+	
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
 radius = 32.0
-height = 216.0
+height = 206.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ct4rk"]
-bg_color = Color(0.00392157, 0, 0, 0.854902)
+[sub_resource type="Animation" id="Animation_fdj5p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_imami"]
-bg_color = Color(0.882353, 0.156863, 0.270588, 1)
+[sub_resource type="Animation" id="Animation_632s8"]
+resource_name = "down"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.333333, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [1, 1, 1, 2]
+}
 
-[sub_resource type="GDScript" id="GDScript_vbl6h"]
-script/source = "extends ProgressBar
+[sub_resource type="Animation" id="Animation_jxst4"]
+resource_name = "down_animation"
 
-#func _on_character_body_2d_player_health_changed(Health, maximum_player_health):
-#	Health -= 1
-	#value = Health
-"
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nnkji"]
+_data = {
+"RESET": SubResource("Animation_fdj5p"),
+"down": SubResource("Animation_632s8"),
+"down_animation": SubResource("Animation_jxst4")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_otnyh"]
+animation = &"down"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mk2vb"]
+animation = &"down_animation"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_juyjf"]
+animation = &"down_animation"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2u245"]
+animation = &"down_animation"
+
+[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_5e5pq"]
+blend_point_0/node = SubResource("AnimationNodeAnimation_otnyh")
+blend_point_0/pos = Vector2(0, -0.9)
+blend_point_1/node = SubResource("AnimationNodeAnimation_mk2vb")
+blend_point_1/pos = Vector2(-1, 0)
+blend_point_2/node = SubResource("AnimationNodeAnimation_juyjf")
+blend_point_2/pos = Vector2(0, 0.9)
+blend_point_3/node = SubResource("AnimationNodeAnimation_2u245")
+blend_point_3/pos = Vector2(1, 0)
+blend_mode = 1
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_0cm0u"]
+states/Walk_down/node = SubResource("AnimationNodeBlendSpace2D_5e5pq")
+states/Walk_down/position = Vector2(406, 82)
+graph_offset = Vector2(-156, -5)
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 collision_mask = 6
@@ -167,7 +220,7 @@ script = SubResource("GDScript_isu8i")
 max_walljump = -2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
+position = Vector2(0, -9)
 shape = SubResource("CapsuleShape2D_pkm1a")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -180,8 +233,31 @@ texture = ExtResource("2_ylaxq")
 hframes = 3
 frame = 1
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_nnkji")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_0cm0u")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Walk_down/blend_position = Vector2(0.214626, 0.123894)
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+anchors_preset = -1
+anchor_top = -0.218
+anchor_bottom = -0.218
+offset_left = -75.0
+offset_top = -155.0
+offset_right = 75.0
+offset_bottom = -128.0
+max_value = 10.0
+step = 1.0
+value = 5.0
+show_percentage = false
+script = ExtResource("3_h4ksh")
+
 [node name="death_screen" type="Sprite2D" parent="."]
-visible = false
 position = Vector2(0.499959, 0.5)
 scale = Vector2(1.19948, 1.19907)
 texture = ExtResource("4_tuknr")
@@ -191,29 +267,5 @@ script = ExtResource("5_nksik")
 visible = false
 texture = ExtResource("6_lrwgo")
 
-[node name="HUD" type="CanvasLayer" parent="."]
-
-[node name="HealthBar" type="ProgressBar" parent="HUD"]
-anchors_preset = -1
-anchor_left = -26.913
-anchor_top = 17.837
-anchor_right = -13.326
-anchor_bottom = 20.065
-offset_left = 31005.8
-offset_top = -11557.4
-offset_right = 15681.6
-offset_bottom = -12970.1
-theme_override_styles/background = SubResource("StyleBoxFlat_ct4rk")
-theme_override_styles/fill = SubResource("StyleBoxFlat_imami")
-step = 0.2
-value = 100.0
-allow_greater = true
-show_percentage = false
-script = SubResource("GDScript_vbl6h")
-
-[node name="Sprite2D3" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("6_lrwgo")
-
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
-[connection signal="player_health_Changed" from="." to="HUD/HealthBar" method="_on_character_body_2d_player_health_changed"]
+[connection signal="player_health_Changed" from="." to="ProgressBar" method="_on_character_body_2d_player_health_changed"]
