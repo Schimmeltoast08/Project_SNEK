@@ -13,12 +13,12 @@ size = Vector2(3949, 37)
 [node name="main" type="Node2D"]
 
 [node name="Screenshot-2024-10-30-18-40-38" type="Sprite2D" parent="."]
-position = Vector2(432, 642)
+position = Vector2(-540.536, -246.43)
 scale = Vector2(4.62116, 5.14285)
 texture = ExtResource("1_12sa4")
 
 [node name="enemy_root-node" parent="." instance=ExtResource("3_hlimb")]
-position = Vector2(-144, 951)
+position = Vector2(-1116.54, 62.5699)
 collision_layer = 3
 collision_mask = 5
 
@@ -30,7 +30,7 @@ script = ExtResource("5_4yffd")
 [node name="TMP" type="Node" parent="."]
 
 [node name="temp_test_platform" type="StaticBody2D" parent="TMP"]
-position = Vector2(1985, 1138)
+position = Vector2(1012.46, 249.57)
 collision_layer = 4
 collision_mask = 0
 
@@ -43,7 +43,7 @@ position = Vector2(6.50007, -8.75)
 scale = Vector2(39.51, 0.365001)
 
 [node name="temp_test_platform2" type="StaticBody2D" parent="TMP"]
-position = Vector2(2310, 787)
+position = Vector2(1337.46, -101.43)
 rotation = 1.5708
 collision_layer = 4
 collision_mask = 0
