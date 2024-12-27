@@ -14,9 +14,10 @@ config/name="Project SNEK"
 run/main_scene="res://scenes/main_scene.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 
-[display]
+[autoload]
 
-window/vsync/vsync_mode=3
+GlobalVars="*res://scenes/global_vars.gd"
+Player="*res://scenes/player.tscn"
 
 [dotnet]
 

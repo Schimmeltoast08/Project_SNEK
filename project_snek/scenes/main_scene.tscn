@@ -1,65 +1,73 @@
 [gd_scene load_steps=7 format=3 uid="uid://bsp4xibu18oo0"]
 
-[ext_resource type="Texture2D" uid="uid://c645jjh1nxsa6" path="res://static sprites/tmp_bg.png" id="1_6rov2"]
+[ext_resource type="Texture2D" path="res://static sprites/tmp/vector-2d-landscapes-backgrounds-scenes-wallpapers-pack-deals-bypeople-33-1995955719.jpg" id="1_12sa4"]
 [ext_resource type="PackedScene" uid="uid://dddj0jy148j2l" path="res://scenes/player.tscn" id="1_bisvo"]
 [ext_resource type="PackedScene" uid="uid://c8lweun22mlwv" path="res://scenes/basic_robot.tscn" id="3_hlimb"]
-[ext_resource type="Texture2D" uid="uid://ih4d6uyen2vt" path="res://static sprites/tmp_black_png.png" id="4_e3msa"]
+[ext_resource type="Script" path="res://scenes/global_vars.gd" id="5_4yffd"]
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vi77q"]
-distance = -742.965
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_8377e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6om2b"]
-size = Vector2(3949, 37)
+size = Vector2(3924.5, 56.0002)
 
 [node name="main" type="Node2D"]
 
 [node name="Screenshot-2024-10-30-18-40-38" type="Sprite2D" parent="."]
-position = Vector2(516, -51)
-rotation = 0.0174533
-scale = Vector2(35.61, 22.72)
-texture = ExtResource("1_6rov2")
+position = Vector2(432, 642)
+scale = Vector2(4.62116, 5.14285)
+texture = ExtResource("1_12sa4")
 
 [node name="enemy_root-node" parent="." instance=ExtResource("3_hlimb")]
-position = Vector2(7.62939e-06, 1072)
+position = Vector2(-144, 951)
 rotation = 0.0174401
 collision_layer = 3
 collision_mask = 5
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("1_bisvo")]
 
-[node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2(-5.42544, 552.153)
-rotation = 0.0174401
+[node name="Global_Vars" type="Node" parent="."]
+script = ExtResource("5_4yffd")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
-position = Vector2(29.0695, -192.689)
-shape = SubResource("WorldBoundaryShape2D_vi77q")
+[node name="TMP" type="Node" parent="."]
 
-[node name="temp_test_platform" type="StaticBody2D" parent="."]
+[node name="temp_test_platform" type="StaticBody2D" parent="TMP"]
 position = Vector2(1985, 1138)
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="temp_test_platform"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TMP/temp_test_platform"]
 position = Vector2(-1434, -68)
-shape = SubResource("RectangleShape2D_6om2b")
+shape = SubResource("WorldBoundaryShape2D_8377e")
 
-[node name="Sprite2D" type="Sprite2D" parent="temp_test_platform/CollisionShape2D"]
-position = Vector2(1, -7.25002)
-scale = Vector2(39.62, 0.335001)
-texture = ExtResource("4_e3msa")
+[node name="Sprite2D" type="Sprite2D" parent="TMP/temp_test_platform/CollisionShape2D"]
+position = Vector2(6.73063, -8.74598)
+scale = Vector2(39.5054, 0.365001)
 
-[node name="temp_test_platform2" type="StaticBody2D" parent="."]
+[node name="temp_test_platform2" type="StaticBody2D" parent="TMP"]
 position = Vector2(2310, 787)
 rotation = 1.5708
 collision_layer = 4
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="temp_test_platform2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TMP/temp_test_platform2"]
+position = Vector2(8.68798e-05, 24)
 shape = SubResource("RectangleShape2D_6om2b")
 
-[node name="Sprite2D" type="Sprite2D" parent="temp_test_platform2/CollisionShape2D"]
+[node name="Sprite2D" type="Sprite2D" parent="TMP/temp_test_platform2/CollisionShape2D"]
 scale = Vector2(10.87, 0.2)
-texture = ExtResource("4_e3msa")
+
+[node name="temp_test_platform2" type="StaticBody2D" parent="TMP/temp_test_platform2"]
+position = Vector2(-60.9863, 3766)
+rotation = 1.5708
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TMP/temp_test_platform2/temp_test_platform2"]
+position = Vector2(1.00028, 2.00004)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_6om2b")
+
+[node name="Sprite2D" type="Sprite2D" parent="TMP/temp_test_platform2/temp_test_platform2/CollisionShape2D"]
+scale = Vector2(10.87, 0.2)
 
 [connection signal="enemy_attack" from="enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]
