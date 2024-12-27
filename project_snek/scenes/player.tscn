@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://dddj0jy148j2l"]
 
 [ext_resource type="Script" path="res://scenes/camera_2d.gd" id="1_dbdjp"]
-[ext_resource type="Texture2D" uid="uid://cr3yusowhmcrh" path="res://Entety sprites/animation sprites/MC_movement.png" id="2_ylaxq"]
+[ext_resource type="Texture2D" uid="uid://83i01mrnbsjt" path="res://Entety sprites/Player/Robot_MC.png" id="2_dkc7v"]
 [ext_resource type="Texture2D" uid="uid://uahyk0j2cwb7" path="res://static sprites/Tmp_death_screen.png" id="4_tuknr"]
 [ext_resource type="Script" path="res://scenes/death_screen.gd" id="5_nksik"]
 [ext_resource type="Texture2D" uid="uid://blyer02jjetmb" path="res://Entety sprites/Player/Robot_MC_outline.png" id="6_lrwgo"]
@@ -12,6 +12,16 @@ script/source = "extends CharacterBody2D
 signal player_health_Changed
 signal player_died
 
+func _ready() -> void:
+	$CoyoteTimer.wait_time = coyote_frames / 60.0
+	
+	
+#region Coyote Time Variables
+var coyote_frames = 6  # How many in-air frames to allow jumping
+var in_coyote = false  # Track whether we're in coyote time or not
+var last_floor = false  # Last frame's on-floor state
+var jumping
+#endregion
 
 #region General Functions
 
@@ -34,16 +44,23 @@ var teleport_cooldown = false # true means you CAN'T teleport
 var gravity = ProjectSettings.get_setting(\"physics/2d/default_gravity\")
 var can_extraspeed = true # on pressing q, you get a lot faster. Later turn this to false (standart) and
 							# activate it when the player unlocks the ability. Once used it enabels itself 
+var prev_velocity: Vector2 = Vector2.ZERO
 #endregion
 #region Movement [WASD + Space + Walljump]
 
 func _physics_process(delta):
+	
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
-	if Input.is_action_just_pressed(\"button_space\") and (is_on_floor() or is_on_wall()) and max_walljump > 0:
+	if Input.is_action_just_pressed(\"button_space\") and (is_on_floor() or is_on_wall() or in_coyote) and max_walljump > 0:
 		velocity.y = jump_force
+		
 		max_walljump -= 1
+		jumping = true
+	
+	if is_on_floor() or is_on_wall():
+		jumping = false
 
 	if Input.is_action_pressed(\"button_q\") and can_extraspeed:
 		extra_speed(300)
@@ -53,13 +70,35 @@ func _physics_process(delta):
 		
 	if Input.is_action_just_released(\"button_space\") and velocity.y < 0:
 		velocity.y *= deceleration_on_jump_release
+		
+	# this implements air hang
+	if abs(velocity.y) < 50:
+		gravity *= 0.98
+	else:
+		gravity = 980
+	
+	if not is_on_floor():
+		velocity.x = lerp(prev_velocity.x, velocity.x, 0.5)
+		
+	if !is_on_floor() and last_floor and !jumping:
+		in_coyote = true
+		$CoyoteTimer.start()
 
 	var direction = Input.get_axis(\"button_a\", \"button_d\")
 	if direction:
 		velocity.x = move_toward(velocity.x,direction * speed, speed * acceleration)
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed * deceleration) # if you put \"delta\" instead of \"speed\" it turns into an ice level
+	
+#region Coyote time
+
+
+#endregion
+	
+	
 	move_and_slide()
+	prev_velocity = velocity
+	last_floor = is_on_floor()
 
 # </movement>
 #endregion
@@ -137,10 +176,10 @@ func take_damage(damage):
 	if alive:
 		prev_health = health
 		health -= damage
-		health_bar.value = move_toward(health,prev_health,0.02)
+		health_bar.value = lerp(prev_health,health,0.02)
 		if health <= 0:
 			alive=false
-			print(\"you dead\")
+			#print(\"you dead\")
 			player_died.emit()
 			speed = 0
 			gravity = 0
@@ -148,6 +187,7 @@ func take_damage(damage):
 			$Camera2D.position_smoothing_enabled = false
 			deceleration = 1
 			jump_force = 0
+				
 		
 #</attack and health>
 #endregion
@@ -157,14 +197,21 @@ func take_damage(damage):
 func extra_speed(number):
 	speed += number
 	can_extraspeed = false
+	jump_force = jump_force * (number / 100) + 1100 # please forgive me for what monstrocity I have created
 	#print(\"activatd speed\")
 	await wait(8)
+	jump_force = -600
 	#print(\"DE-activated speed\")
 	speed -= number
 	await wait(16)
 	can_extraspeed = true
 	
+	
 #endregion
+
+
+func _on_coyote_timer_timeout() -> void:
+	in_coyote = false
 "
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pkm1a"]
@@ -200,7 +247,7 @@ position_smoothing_enabled = true
 script = ExtResource("1_dbdjp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_ylaxq")
+texture = ExtResource("2_dkc7v")
 hframes = 3
 frame = 1
 
@@ -239,5 +286,8 @@ script = SubResource("GDScript_vbl6h")
 visible = false
 texture = ExtResource("6_lrwgo")
 
+[node name="CoyoteTimer" type="Timer" parent="."]
+
 [connection signal="player_died" from="." to="death_screen" method="_on_character_body_2d_player_died"]
 [connection signal="player_health_Changed" from="." to="HUD/HealthBar" method="_on_character_body_2d_player_health_changed"]
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
