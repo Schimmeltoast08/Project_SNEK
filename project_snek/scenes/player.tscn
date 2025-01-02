@@ -11,7 +11,10 @@ script/source = "extends CharacterBody2D
 
 signal player_health_Changed
 signal player_died
-
+var moveRight = Input.is_action_just_pressed(\"button_d\")
+var moveLeft = Input.is_action_just_pressed(\"button_a\")
+var moveUp = Input.is_action_just_pressed(\"button_w\")
+var moveDown = Input.is_action_just_pressed(\"button_s\")
 func _ready() -> void:
 	$CoyoteTimer.wait_time = coyote_frames / 60.0
 	
@@ -104,20 +107,28 @@ func _physics_process(delta):
 #endregion
 #region Teleport [RC]
 
-	if Input.is_action_just_pressed(\"mouse_RC\") and teleport_cooldown == false:
-		var dir = 0 # if you walk right or left
-		teleport_cooldown = true
-		if(velocity.x>0):
-			dir=1  #right
-		elif(velocity.x<0):
-			dir=-1 #left
-		else:
-			return
+	if Input.is_action_just_pressed(\"mouse_RC\") and !teleport_cooldown:
+		var moveRight = Input.is_action_pressed(\"button_d\")
+		var moveLeft = Input.is_action_pressed(\"button_a\")
+		var moveUp = Input.is_action_pressed(\"button_w\")
+		var moveDown = Input.is_action_pressed(\"button_s\")
+		var dirX = 0 # if you walk right or left
+		var dirY = 0 # if you \"aim\" up or down with keys
+		if(moveDown):
+			dirY+=1
+		if(moveUp):
+			dirY-=1
+		if(moveRight):
+			dirX+=1
+		if(moveLeft):
+			dirX-=1
+		print(dirX,dirY) 
+		teleport_cooldown = false
 		#print(\"move\")
 		$Sprite2D.visible=false
 		$Sprite2D2.visible=true  # makes player invisible inbetween teleportd
 		invulnerable = true
-		teleport_to(position+Vector2(500*dir,0)) # 500 = teleport lenght
+		teleport_to(position+Vector2(500*dirX,250*dirY), Vector2(dirX,dirY)) # 500 = teleport lenght
 		await wait(0.25)  # 0.25 seconds delay (250ms)s)	
 		teleport_cooldown = true
 		$Sprite2D.visible=true
@@ -128,24 +139,45 @@ func _physics_process(delta):
 func teleport_cooldown_func(seconds):
 	await wait(seconds)
 	teleport_cooldown = false
-
-func teleport_to(new_position: Vector2):
+	
+	###### teleport fucntion
+	
+func teleport_to(new_position: Vector2, dir: Vector2):
 	# Check if moving to the new position will collide with any object
+	var max_iterationsx = 500 # makes so teleport to the right cant be negative\"to the left\"
+	var iteration_countx = 0
+	var max_iterationsy = 250 # so left teleport cant turn right
+	var iteration_county = 0
+	
+	var new_position2 = new_position
+	
 	collision_mask = 4 # Makes the player able to teleport trough enemies
-	var collision = test_move(global_transform, new_position - global_position)
-	 
-	if collision:  # collision with mask 3
-		print(\"Blocked, cannot teleport to:\", new_position)
-	else:
-		print(\"Teleporting to:\", new_position)
-		$Sprite2D.visible = false
-		$Sprite2D2.visible = true
-
-		await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
+	
+	var collision = test_move(global_transform, new_position2 - global_position)
+	  #moves the character to the opposite way of the teleport until you can teleport
+	var collision_x = test_move(global_transform, new_position2-Vector2(0,dir.y*250) - global_position)
+	var collision_y = test_move(global_transform, new_position2-Vector2(dir.x*500,0) - global_position)
+	# collision separate for x and y axis so teleport dont have to be 45 degres
+	
+	while collision_x and iteration_countx<= max_iterationsx: #changing the new position x untill not collide
+		new_position2.x+=dir.x*-1
+		collision_x = test_move(global_transform, new_position2-Vector2(0,dir.y*250) - global_position)
+		iteration_countx +=1
 		
-		global_position = new_position
-		$Sprite2D.visible = true
-		$Sprite2D2.visible = false
+	while collision_y and iteration_county <= max_iterationsy: #changing the new position y axis until not collide
+		new_position2.y+=dir.y*-1
+		collision_y = test_move(global_transform, new_position2-Vector2(dir.x*500,0) - global_position)
+		iteration_county +=1
+		
+	print(\"Teleporting to:\", new_position2)
+	$Sprite2D.visible = false
+	$Sprite2D2.visible = true
+
+	await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
+		
+	global_position = new_position2
+	$Sprite2D.visible = true
+	$Sprite2D2.visible = false
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 #</teleport>
 	
@@ -195,6 +227,7 @@ func take_damage(damage):
 
 ### <Speed Ability> ###
 func extra_speed(number):
+	$Sprite2D2.visible=true
 	speed += number
 	can_extraspeed = false
 	jump_force = jump_force * (number / 100) + 1100 # please forgive me for what monstrocity I have created
@@ -203,6 +236,7 @@ func extra_speed(number):
 	jump_force = -600
 	#print(\"DE-activated speed\")
 	speed -= number
+	$Sprite2D2.visible=false
 	await wait(16)
 	can_extraspeed = true
 	
