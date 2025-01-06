@@ -58,10 +58,13 @@ func _on_area_near_body_exited(body):
 	$border.visible = false
 	close=false
 		
-# ---------------------------------------------------------------------------------------------
+
+#region usefull func
+
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
-#-------------------------------------------------- Good Function for all Nodes ---------------	
+#endregion
+
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	attacking = true

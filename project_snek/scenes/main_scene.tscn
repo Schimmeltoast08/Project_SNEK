@@ -67,3 +67,5 @@ shape = SubResource("RectangleShape2D_6om2b")
 scale = Vector2(10.87, 0.2)
 
 [connection signal="enemy_attack" from="enemy_root-node" to="CharacterBody2D" method="_on_enemy_rootnode_enemy_attack"]
+[connection signal="player_near_robot" from="enemy_root-node" to="Global_Vars" method="_on_enemy_rootnode_player_near_robot"]
+[connection signal="player_near_robot_exited" from="enemy_root-node" to="Global_Vars" method="_on_enemy_rootnode_player_near_robot_exited"]
