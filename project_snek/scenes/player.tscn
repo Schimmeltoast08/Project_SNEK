@@ -15,9 +15,14 @@ var moveRight = Input.is_action_just_pressed(\"button_d\")
 var moveLeft = Input.is_action_just_pressed(\"button_a\")
 var moveUp = Input.is_action_just_pressed(\"button_w\")
 var moveDown = Input.is_action_just_pressed(\"button_s\")
+@onready var global_vars = $\"../Global_Vars\"
+
+
 func _ready() -> void:
 	$CoyoteTimer.wait_time = coyote_frames / 60.0
 	
+
+ 	
 	
 #region Coyote Time Variables
 var coyote_frames = 6  # How many in-air frames to allow jumping
@@ -76,7 +81,7 @@ func _physics_process(delta):
 		
 	# this implements air hang
 	if abs(velocity.y) < 50:
-		gravity *= 0.98
+		gravity = 960
 	else:
 		gravity = 980
 	
@@ -191,6 +196,7 @@ func teleport_to(new_position: Vector2, dir: Vector2):
 var getting_attacked = false
 var alive = true # status if player is alive
 
+
 func _on_enemy_rootnode_enemy_attack():
 	if invulnerable == false: # for when teleporting and other immunity frames
 		for i in range(10):
@@ -200,12 +206,16 @@ func _on_enemy_rootnode_enemy_attack():
 	print(\"Player took damage. Remaining: \", health,\"%\")
 	
 	
+	
 # manages player health
 var prev_health
 
+
+
+
 func take_damage(damage):
 	player_health_Changed.emit(health, maximum_player_health)
-	if alive:
+	if alive and global_vars.enemy_near == true:
 		prev_health = health
 		health -= damage
 		health_bar.value = lerp(prev_health,health,0.02)
