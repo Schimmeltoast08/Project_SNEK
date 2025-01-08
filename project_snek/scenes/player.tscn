@@ -126,13 +126,16 @@ func _physics_process(delta):
 		teleport_cooldown = false
 		#print(\"move\")
 		$Sprite2D.visible=false
-		$Sprite2D2.visible=true  # makes player invisible inbetween teleportd
+		
+	
+		  # makes player invisible inbetween teleportd
+		velocity=Vector2(0,0)
 		invulnerable = true
 		teleport_to(position+Vector2(500*dirX,250*dirY), Vector2(dirX,dirY)) # 500 = teleport lenght
-		await wait(0.25)  # 0.25 seconds delay (250ms)s)	
+		await wait(2.5)  # 0.25 seconds delay (250ms)s)	
 		teleport_cooldown = true
 		$Sprite2D.visible=true
-		$Sprite2D2.visible=false
+		
 		invulnerable = false
 		teleport_cooldown_func(2)
 
@@ -170,14 +173,34 @@ func teleport_to(new_position: Vector2, dir: Vector2):
 		iteration_county +=1
 		
 	print(\"Teleporting to:\", new_position2)
+	
+	var sprite2d2 = $Sprite2D2
+	var parent =sprite2d2.get_parent()
+	var root = get_tree().root
+	parent.remove_child(sprite2d2)
+	root.add_child(sprite2d2)
+	sprite2d2.global_position=global_position
 	$Sprite2D.visible = false
-	$Sprite2D2.visible = true
-
-	await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
-		
+	sprite2d2.visible = true
+	get_node(\"Camera2D/Sprite2D3\").visible=false
+	#camera movment
+	var tween = create_tween()
+	
+	tween.tween_property(get_node(\"Camera2D\"),\"global_position\", new_position2, 2.25)
+	print(new_position2)
+	await tween.finished
+	
 	global_position = new_position2
-	$Sprite2D.visible = true
-	$Sprite2D2.visible = false
+	print(new_position2)
+	  # 250ms delay  #just fancy trying to make the teleport look better/otional
+	
+	get_node(\"Camera2D\").global_position = global_position
+	get_node(\"Camera2D\").offset = Vector2.ZERO
+	get_node(\"Camera2D/Sprite2D3\").visible=false
+	
+	sprite2d2.visible=false
+	root.remove_child(sprite2d2)
+	parent.add_child(sprite2d2)
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 #</teleport>
 	
@@ -280,6 +303,10 @@ zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 script = ExtResource("1_dbdjp")
 
+[node name="Sprite2D3" type="Sprite2D" parent="Camera2D"]
+visible = false
+texture = ExtResource("6_lrwgo")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_dkc7v")
 hframes = 3
@@ -315,10 +342,6 @@ value = 100.0
 allow_greater = true
 show_percentage = false
 script = SubResource("GDScript_vbl6h")
-
-[node name="Sprite2D3" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("6_lrwgo")
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
