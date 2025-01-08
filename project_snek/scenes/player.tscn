@@ -111,7 +111,6 @@ func _physics_process(delta):
 # </movement>
 #endregion
 #region Teleport [RC]
-
 	if Input.is_action_just_pressed(\"mouse_RC\") and !teleport_cooldown:
 		var moveRight = Input.is_action_pressed(\"button_d\")
 		var moveLeft = Input.is_action_pressed(\"button_a\")
@@ -128,16 +127,18 @@ func _physics_process(delta):
 		if(moveLeft):
 			dirX-=1
 		print(dirX,dirY) 
-		teleport_cooldown = false
+		teleport_cooldown = true
 		#print(\"move\")
 		$Sprite2D.visible=false
-		$Sprite2D2.visible=true  # makes player invisible inbetween teleportd
+		
+		  # makes player invisible inbetween teleportd
+		velocity=Vector2(0,0)
 		invulnerable = true
 		teleport_to(position+Vector2(500*dirX,250*dirY), Vector2(dirX,dirY)) # 500 = teleport lenght
-		await wait(0.25)  # 0.25 seconds delay (250ms)s)	
+		await wait(2.5)  # 0.25 seconds delay (250ms)s)	
 		teleport_cooldown = true
 		$Sprite2D.visible=true
-		$Sprite2D2.visible=false
+		
 		invulnerable = false
 		teleport_cooldown_func(2)
 
@@ -175,16 +176,40 @@ func teleport_to(new_position: Vector2, dir: Vector2):
 		iteration_county +=1
 		
 	print(\"Teleporting to:\", new_position2)
-	$Sprite2D.visible = false
-	$Sprite2D2.visible = true
+	
+		# Create a Sprite2D instance to be a player dummy
+	var Sprite2D4 = Sprite2D.new()
+# texture
+	Sprite2D4.texture = preload(\"res://Entety sprites/Player/Robot_MC.png\")  
+# add it as a child to the main scene to not get influenced of characterbody2d position
+	get_tree().root.add_child(Sprite2D4)
 
-	await wait(0.25)  # 250ms delay  #just fancy trying to make the teleport look better/otional
-		
-	global_position = new_position2
-	$Sprite2D.visible = true
-	$Sprite2D2.visible = false
+	Sprite2D4.global_position=Vector2(global_position) # looks the dummy on the position we pressed right click
+	
+	$Sprite2D.visible = false #  makes character invisible
+
+	get_node(\"Camera2D/Sprite2D3\").visible = false # true to have a ghost follow the teleport
+	#camera movment
+	var tween = create_tween()
+	tween.tween_property(get_node(\"Camera2D\"),\"global_position\", new_position2, .25)# makes camera move to new position in \".25 sec\"
+	print(new_position2)
+	await tween.finished # pause untill teleport is done
+	global_position = new_position2 #moves player to new position
+	print(new_position2)
+
+	
+	get_node(\"Camera2D\").global_position = global_position # moves camera back to follow player
+	get_node(\"Camera2D\").offset = Vector2.ZERO
+	get_node(\"Camera2D/Sprite2D3\").visible=false #makes camera invisible again if it was visible
+	
+	$Sprite2D.visible = true # makes character visible
+	Sprite2D4.visible= false# makes dummy invisible
+	get_tree().root.remove_child(Sprite2D4) #trying to remove the old dummy
+
+	
 	collision_mask = 6 # Make the player able to collide with enemy after teleport
 #</teleport>
+	
 	
 #endregion
 #region Health and Attack
@@ -290,6 +315,10 @@ zoom = Vector2(0.5, 0.5)
 position_smoothing_enabled = true
 script = ExtResource("1_dbdjp")
 
+[node name="Sprite2D3" type="Sprite2D" parent="Camera2D"]
+visible = false
+texture = ExtResource("6_lrwgo")
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_dkc7v")
 hframes = 3
@@ -325,10 +354,6 @@ value = 100.0
 allow_greater = true
 show_percentage = false
 script = SubResource("GDScript_vbl6h")
-
-[node name="Sprite2D3" type="Sprite2D" parent="."]
-visible = false
-texture = ExtResource("6_lrwgo")
 
 [node name="CoyoteTimer" type="Timer" parent="."]
 
