@@ -30,7 +30,6 @@ var in_coyote = false  # Track whether we're in coyote time or not
 var last_floor = false  # Last frame's on-floor state
 var jumping
 #endregion
-
 #region General Functions
 
 ###----------------- usefull general functions -------------
@@ -132,8 +131,9 @@ func _physics_process(delta):
 		$Sprite2D.visible=false
 		
 		  # makes player invisible inbetween teleportd
-		velocity=Vector2(0,0)
 		invulnerable = true
+		for i in range (200):
+			velocity=Vector2(0,0)
 		teleport_to(position+Vector2(500*dirX,250*dirY), Vector2(dirX,dirY)) # 500 = teleport lenght
 		await wait(2.5)  # 0.25 seconds delay (250ms)s)	
 		teleport_cooldown = true
